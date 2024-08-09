@@ -39,7 +39,7 @@ print(f"Input file: {args.inputFile}")
 print(f"Value of k: {args.k}")
 print(f"Result folder name {args.result_folder}")
 print(f"Verbosity: {args.verbose}")
-print(f"Verbosity: {args.print_trace_of_constraint}")
+print(f"Print Trace Verbosity: {args.print_trace_of_constraint}")
 
 fileName = args.inputFile
 outputName = fileName[:-4]
