@@ -1,8 +1,9 @@
 """
 Author: Robyn Burger and Allison Shi and Adiesha Liyanage and Brendan Mumey
 Date: 2024-08-07
-Description: Given a positive integer k (pre-determined # of false positive(s)), and n x m binary mutation matrix (sorted),
-EssentCell4 produces the corresponding essential order diagram. This information will be written to
+Description: Given a positive integer k (pre-determined # of false positive(s)),
+and n x m binary mutation matrix (sorted), EssentCell4 produces the 
+corresponding essential order diagram. This information will be written to
 results/inputFile folder.
 
 ****WITH MULTIPLICITY without y variables and with improved group testing***
@@ -18,6 +19,7 @@ $ python EssentCell4.py data.sorted.csv 3 --verbose -result_folder result4
 $ python EssentCell4.py data.sorted.csv 3
  """
 import argparse
+import os
 import time
 import numpy as np
 import graphviz
@@ -138,7 +140,8 @@ def test_ESS(k, U, Vset, sig):
     global D
     global count
     count += 1
-    print(f"Essential relation ILP call {count}")
+    if count % 50 == 0:
+        print(f"Essential relation ILP call {count}")
     try:
         # Silence console output
         env = Env(empty=True)
