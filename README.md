@@ -1,8 +1,8 @@
 # EssentCell 
 
-Cancer is an evolutionary disease. As cells multiply, they can take on new mutations, and through the accumulation of those mutations, they can become cancerous. Tracking this evolution is helpful to understanding how the disease progresses and the most effective ways to treat it. We model this evolution in diagrams called phylogenetic trees. Much like a family tree, a phylogenetic tree depicts the relationships between generations of cells. These models depend on taking physical samples from cancer patients. 
+Cancer is an evolutionary disease. As cells multiply, they can take on new mutations, and through the accumulation of those mutations, they can become cancerous. Tracking this evolution is helpful for understanding how the disease progresses and the most effective ways to treat it. We model this evolution in diagrams called phylogenetic trees. Much like a family tree, a phylogenetic tree depicts the relationships between generations of cells. These models depend on taking physical samples from cancer patients. 
 
-But, these samples are imperfect, often leading to multiple phylogenetic trees. EssentCell finds the lineages that stay consistent amoung all optimal phylogenetic trees. These essential relations provide insight into the most probable ancestral relationships, painting a more precise picture of a tumor's evolutionary history. 
+But, these samples are imperfect, often leading to multiple phylogenetic trees. EssentCell finds the lineages that stay consistent among all optimal phylogenetic trees. These essential relations provide insight into the most probable ancestral relationships, painting a more precise picture of a tumor's evolutionary history. 
 
 
 # Dependencies 
