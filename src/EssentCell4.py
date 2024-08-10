@@ -249,7 +249,7 @@ if verbose:
     f.write(f"n (number of samples): {n}\n")
     f.write(f"m (number of mutations): {m}\n")
     f.write(f"EssILP calls: {count}\n")
-    f.write(f"Runtime: {time.time() - end_time} seconds\n")
+    f.write(f"Runtime: {end_time - start_time} seconds\n")
     f.write(f"Number of Nodes: {Graph.number_of_nodes()}\n")
     # f.write(f"Poset Width: {Width(Graph)}\n")
     f.write(f"Essential Relation: {[edge for edge in Graph.edges]}\n\n")
