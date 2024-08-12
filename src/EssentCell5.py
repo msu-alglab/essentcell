@@ -38,7 +38,7 @@ parser.add_argument('-result_folder', type=str, default="results4", help="The re
 parser.add_argument('--verbose', action='store_true', help='Increase output verbosity')
 parser.add_argument('-print_trace_of_constraint', action='store_true', help='Increase the output verbosity of '
                                                                             'constraints')
-parser.add_argument('-random_u_sample_size_for_group_testing', type=int, default=10, help='This is the size of the '
+parser.add_argument('-random_u_sample_size_for_group_testing', type=int, default=8, help='This is the size of the '
                                                                                           'random sample size for '
                                                                                           'initial group testing ')
 args = parser.parse_args()
@@ -133,9 +133,9 @@ Given a set of integers, V, Split(V) returns V partitioned into 2 subsets.
 
 
 def Split(V):
-    V = list(V)
+    #V = list(V)
     i = int(len(V) / 2)
-    return set(V[:i]), set(V[i:])
+    return V[:i], V[i:]
 
 
 """
@@ -143,8 +143,8 @@ Returns the essential order relation of an input D matrix.
 """
 
 
-def test_ESS(k, U, Vset, sig):
-    # if len(U) == 0 or len(Vset) == 0:
+def test_ESS(k, U, V, sig):
+    # if len(U) == 0 or len(V) == 0:
     #     return True
     global D
     global count
@@ -165,11 +165,11 @@ def test_ESS(k, U, Vset, sig):
         B11 = model.addMVar((m, m), vtype=GRB.BINARY, name="B11")
 
         # total = sum(sum(M[i]*(1 - D[i, j])*(X[i, j]) + k*M[i]*(D[i, j])*(1 - X[i, j]) for j in range(m)) for i in range(n))
-        total = sum(sum(M[i] * (1 - D[i, j]) * X[i, j] for j in range(m)) for i in range(n))  # new obj function 8/5
-        model.setObjective(total, GRB.MINIMIZE)
-        if print_trace:
-            print("printing minimizing objective")
-            print(model.getObjective())
+        #total = sum(sum(M[i] * (1 - D[i, j]) * X[i, j] for j in range(m)) for i in range(n))  # new obj function 8/5
+        model.setObjective(0, GRB.MINIMIZE)
+        #if print_trace:
+        #    print("printing minimizing objective")
+        #    print(model.getObjective())
 
         # Numbers to the right of each constraint correspond to those in the paper
         model.addConstrs(
@@ -188,14 +188,14 @@ def test_ESS(k, U, Vset, sig):
             print(f"{model.getRow(glb_cons)} {glb_cons.Sense} {glb_cons.RHS}")
 
         for u in U:
-            nz = len(Vset)
+            nz = len(V)
             z = model.addMVar((m, nz), vtype=GRB.BINARY, name=f"z_{u}")
             model.update()
 
             # Test for EO
             for i in range(m):
                 for v_index in range(nz):
-                    v = list(Vset)[v_index]
+                    v = V[v_index]
                     model.addConstr(X[u, i] - X[v, i] <= z[i, v_index])  # (10)
                     model.addConstr(z[i, v_index] <= (X[u, i] - X[v, i] + 1) / 2)  # (10)
 
@@ -210,8 +210,10 @@ def test_ESS(k, U, Vset, sig):
         if print_trace:
             model.write("model.ess.lp")
         if model.Status == 3:
+            print(U, V, " infeasible")
             return False
         else:
+            print(U, V, " feasible *****")
             return True
 
     except GurobiError as ex:
@@ -219,15 +221,19 @@ def test_ESS(k, U, Vset, sig):
 
 
 def k_ess(k, U, V, sig):
-    if (len(U) != 0 and len(V) != 0) and ((len(set(U) & set(V)) != 0) or (not test_ESS(k, U, V, sig))):
-        # if (not test_ESS(k, U, V, sig)):
+    if len(U) > 0 and len(V) > 0 and ((set(U) & set(V)) or (not test_ESS(k, U, V, sig))):
+##        #print("sets: ", set(U), set(V))
+##        #print("intersection: ", set(U) & set(V))
+##        # if (not test_ESS(k, U, V, sig)):
         if len(U) == 1 and len(V) == 1:
             return {(x, y) for x in U for y in V}
         else:
-            U_L, U_R = Split(U)
-            V_L, V_R = Split(V)
-            return k_ess(k, U_L, V_L, sig).union(
-                k_ess(k, U_L, V_R, sig).union(k_ess(k, U_R, V_L, sig).union(k_ess(k, U_R, V_R, sig))))
+            if len(U) > len(V):
+                U_L, U_R = Split(U)
+                return k_ess(k, U_L, V, sig).union(k_ess(k, U_R, V, sig))
+            else:
+                V_L, V_R = Split(V)
+                return k_ess(k, U, V_L, sig).union(k_ess(k, U, V_R, sig))
     else:
         return set()
 
@@ -242,19 +248,30 @@ def calculate_essential_for_given_k(k):
         print(f"random_sample_size is greater than the input size: {random_sample_size} > {D.shape[0]}")
         exit(1)
 
-    S = {num for num in range(D.shape[0])}
+    S = list(range(D.shape[0]))
 
     # pick random_sample_size number of vertices from S
     ranking = {}
+##    for v in S:
+##        rank = 0
+##        random_u_s = random.sample(list(S), random_sample_size)
+##        # test each random u against the v and calculate the rank
+##        for r_u in random_u_s:
+##            if v == r_u or (not test_ESS(k, {r_u}, {v}, sig)):
+##                if v != r_u:
+##                    rank += 1
+##        ranking[v] = rank
+
+    print("doing random sample ranking")
+    random_u_s = random.sample(list(S), random_sample_size)
+    print("random sample: ", random_u_s)
+    random_u_s = sorted(random_u_s)
+    print("random sample: ", random_u_s)
+    r_ess_set = k_ess(k, random_u_s, S, sig)
     for v in S:
-        rank = 0
-        random_u_s = random.sample(list(S), random_sample_size)
-        # test each random u against the v and calculate the rank
-        for r_u in random_u_s:
-            if v == r_u or (not test_ESS(k, {r_u}, {v}, sig)):
-                if v != r_u:
-                    rank += 1
-        ranking[v] = rank
+        ranking[v] = 0
+    for r,v in r_ess_set:
+        ranking[v] += 1
 
     sorted_v_s = [key for key, value in sorted(ranking.items(), key=lambda item: item[1])]
     print(sorted_v_s)
