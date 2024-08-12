@@ -30,6 +30,7 @@ import networkx
 import pandas as pd
 from gurobipy import *
 from networkx import *
+from itertools import product
 
 parser = argparse.ArgumentParser(description="Arguments for the EssentCell program")
 parser.add_argument('inputFile', type=str, help="Sorted Input file to the program")
@@ -221,21 +222,20 @@ def test_ESS(k, U, V, sig):
 
 
 def k_ess(k, U, V, sig):
-    if len(U) > 0 and len(V) > 0 and ((set(U) & set(V)) or (not test_ESS(k, U, V, sig))):
-##        #print("sets: ", set(U), set(V))
-##        #print("intersection: ", set(U) & set(V))
-##        # if (not test_ESS(k, U, V, sig)):
-        if len(U) == 1 and len(V) == 1:
-            return {(x, y) for x in U for y in V}
+    if (set(U) & set(V)) or (not test_ESS(k, U, V, sig)):
+        if len(U) * len(V) <= 8:
+            result = set()
+            for u, v in product(U,V):
+                if u == v or (not test_ESS(k, [u], [v], sig)):
+                    result.add((u, v))
+            return result
+        if len(U) > len(V):
+            U_L, U_R = Split(U)
+            return k_ess(k, U_L, V, sig).union(k_ess(k, U_R, V, sig))
         else:
-            if len(U) > len(V):
-                U_L, U_R = Split(U)
-                return k_ess(k, U_L, V, sig).union(k_ess(k, U_R, V, sig))
-            else:
-                V_L, V_R = Split(V)
-                return k_ess(k, U, V_L, sig).union(k_ess(k, U, V_R, sig))
-    else:
-        return set()
+            V_L, V_R = Split(V)
+            return k_ess(k, U, V_L, sig).union(k_ess(k, U, V_R, sig))
+    return set()
 
 
 def calculate_essential_for_given_k(k):
