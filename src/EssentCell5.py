@@ -223,7 +223,7 @@ def test_ESS(k, U, V, sig):
 
 def k_ess(k, U, V, sig):
     if (set(U) & set(V)) or (not test_ESS(k, U, V, sig)):
-        if len(U) * len(V) <= 8:
+        if len(U) * len(V) <= 16:   # this could be an optional input parameter
             result = set()
             for u, v in product(U,V):
                 if u == v or (not test_ESS(k, [u], [v], sig)):
