@@ -18,7 +18,7 @@ EssentCell is coded in Python 3.11.7
 
 This ILP Implementation is inspired by \[2\]. 
 
-Simulated data was obtained from \[\4\], which was produced using sequencing data of 77 patient with Acute Myeloid Leukemia (AML) from \[\3\]. Real data is from study of six acute lymphoblastic leukemia (ALL) patients in \[1\]. 
+Simulated data was obtained from \[4\], which was produced using sequencing data of 77 patient with Acute Myeloid Leukemia (AML) from \[3\]. Real data is from study of six acute lymphoblastic leukemia (ALL) patients in \[1\]. 
 
 
 # References 
