@@ -4,3 +4,8 @@ TODOS:
 - Change input such that first row is name of mutation and column being name of cells.
 - (Related) Per cell list strongly component id as an addition to output.
 - Provide adjaceny matrix that list the mutations for the strongly connect components.
+
+
+Figures:
+- Add component/cluster id to nodes and number of cells.
+- Add mutations to edges.
