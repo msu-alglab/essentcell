@@ -67,7 +67,9 @@ def FindOpt():
         X = model.addMVar((n, m), vtype=GRB.BINARY, name="X")
 
         # total = sum(sum(M[i]*(1 - D[i, j])*(X[i, j]) + k * M[i] * (D[i, j])*(1 - X[i, j]) for j in range(m)) for i in range(n))
-        total = sum(sum((1 - D[i, j]) * X[i, j] for j in range(m)) for i in range(n))  # new obj function 9/6
+        total = sum(
+            sum((1 - D[i, j]) * X[i, j] for j in range(m) if D[i, j] != -1) for i in range(n))  # new obj function 9/6
+        # we check whether the original data point is not missing.
         model.setObjective(total, GRB.MINIMIZE)
 
         B01 = model.addMVar((m, m), vtype=GRB.BINARY, name="B01")
@@ -82,8 +84,10 @@ def FindOpt():
             X[i, p] + X[i, q] - 1 <= B11[p, q] for p in range(m) for q in range(p + 1, m) for i in range(n))  # (3)
         model.addConstrs(B01[p, q] + B10[p, q] + B11[p, q] <= 2 for p in range(m) for q in range(p + 1, m))  # (4)
         # model.addConstrs(sum(sum((1 - X[i, j]) * D[i,j] == k for j in range(m)) for i in range(n))) # (5) updated on 8/5
-        glb_cons = model.addConstr(sum((1 - X[i, j]) * D[i, j] for i in range(n) for j in range(m)) == k,
-                                   name="global_constraint")  # 9/5 test
+        glb_cons = model.addConstr(
+            sum((1 - X[i, j]) * D[i, j] for i in range(n) for j in range(m) if D[i, j] == 1) == k,
+            name="global_constraint")  # 9/5 test,
+        # here we check whether D[i,j] == 1 to count the number changed false positives
         # model.update()
         if print_trace:
             print("printing global_constraint")
@@ -187,8 +191,9 @@ def test_ESS(k, U, V, sig):
         model.addConstrs(
             X[i, p] + X[i, q] - 1 <= B11[p, q] for p in range(m) for q in range(p + 1, m) for i in range(n))  # (3)
         model.addConstrs(B01[p, q] + B10[p, q] + B11[p, q] <= 2 for p in range(m) for q in range(p + 1, m))  # (4)
-        glb_cons = model.addConstr(sum((1 - X[i, j]) * D[i, j] for i in range(n) for j in range(m)) == k,
-                                   name="global_constraint")  # 8/5 test
+        glb_cons = model.addConstr(
+            sum((1 - X[i, j]) * D[i, j] for i in range(n) for j in range(m) if D[i, j] == 1) == k,
+            name="global_constraint")  # 8/5 test
 
         # model.update()
         if print_trace:
@@ -210,7 +215,8 @@ def test_ESS(k, U, V, sig):
             for v in range(nz):
                 model.addConstr(sum(z[i, v] for i in range(m)) >= 1)  # (11)
 
-        model.addConstr(sum(sum((1 - D[i, j]) * X[i, j] for i in range(n)) for j in range(m)) == sig)  # (12) 8/5
+        model.addConstr(
+            sum(sum((1 - D[i, j]) * X[i, j] for i in range(n)) for j in range(m) if D[i, j] != -1) == sig)  # (12) 8/5
         # model.addConstr(sum(sum(M[i]*(1 - D[i, j])*(X[i, j]) + k * M[i] * (D[i, j])*(1 - X[i, j]) for j in range(m)) for i in range(n)) == sig) # (8)
 
         # model.update()
