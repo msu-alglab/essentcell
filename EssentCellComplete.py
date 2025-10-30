@@ -10,11 +10,6 @@ import pandas as pd
 from gurobipy import *
 
 
-# # define the variable for dataset and the count variable globally so that it can be reused again
-# global D
-# global count
-
-
 def increment_counter(parameters: dict, key: str):
     parameters[key] = parameters[key] + 1
 
@@ -367,6 +362,62 @@ def test_ESS_with_mutation(parameters: dict, k: int, U, V, sig: float, j: int):
         print(f"*********ERROR*********\n{ex}")
 
 
+def Width(G):
+    max = 0
+    for x in networkx.antichains(G):
+        if len(x) > max:
+            max = len(x)
+    return max
+
+
+def add_info_about_final_graph(g, output_name, kappa, results_folder="results"):
+    path_to_result = f"{results_folder}/{output_name}/"
+    verbose_result_file = f"{path_to_result}{output_name}_kappa_{kappa}.graph_info.txt"  # creates the file automatically if it is not there
+    print(f"Verbose result is written into {verbose_result_file}")
+    f = open(verbose_result_file, "a")
+    f.write(f"Number of Nodes: {g.number_of_nodes()}\n")
+    f.write(f"Poset Width: {Width(g)}\n")
+    f.write(f"Essential Relation: {[edge for edge in g.edges]}\n\n")
+    print(f"\nResults written was to file: {verbose_result_file}")
+    f.close()
+    # persisting the intersection graph with collapsed with mutation labels
+    intersection_graph_file = f"{path_to_result}{output_name}_kappa_{kappa}.graph_persist.txt"
+    networkx.write_edgelist(g, intersection_graph_file, delimiter="#")  # writing essential relations to file.
+
+
+def find_the_mutation_labels(parameters: dict, g: networkx.DiGraph):
+    kmin = parameters["kmin"]
+    kmax = parameters["kmax"]
+    verbose = parameters["verbose"]
+    n = parameters["numofrows"]
+    m = parameters["numofmutations"]
+
+    # basically each edge in the hasse diagram we need to find mutations.
+    # first find the optimal value
+    for (u, v) in g.edges():  # for each edge
+        # we need to pick a representative from both u and v
+        u_rep = int(u.split(",")[0])
+        v_rep = int(v.split(",")[0])
+        print(f"u: {u_rep}, v: {v_rep}")
+        labels = []
+        for mutation in range(0, m):  # for each mutation
+            for k in range(kmin, kmax + 1):
+                sig_k = FindOpt(parameters, k)
+                # if v->u is feasible for mutation, add it to labels
+                feasibility = test_ESS_with_mutation(parameters, k, [v_rep], [u_rep], sig_k, mutation)
+                if verbose:
+                    if feasibility:
+                        print(f"Mutation {mutation} is feasible for v:{v} to u:{u}")
+                        labels.append(mutation)
+                        break
+                    else:
+                        print(f"Mutation {mutation} is NOT feasible for v:{v} to u:{u}")
+        g[u][v]["mutation_labels"] = str(labels)
+
+    for u, v in g.edges():
+        print(f"Edge {u}->{v} with weight {g[u][v]['mutation_labels']}")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Arguments for the EssentCell program")
     parser.add_argument('inputFile', type=str, help="Sorted Input file to the program")
@@ -391,6 +442,7 @@ def main():
     outputName = fileName[:-4]  # remove the file extension
     print(f"Input file: {fileName}")
     print(f"Output file: {outputName}")
+    results_folder = args.result_folder
 
     # defining the necessary parameters for the whole run.
     kmin = args.kmin
@@ -442,6 +494,50 @@ def main():
             f.write(f"Essential Relation: {[edge for edge in Graph_k.edges]}\n\n")
             print(f"\nResults written was to file: {verboseResultFile}")
             f.close()
+
+    print("Step 2---------------------------------------------------------")
+    print("Working on the strongly connected graph")
+    print("Step 2.1--- Generating the intersection graph")
+
+    intersection_of_edges = set(Graphs[0].edges)
+    print(Graphs)
+    print(Graphs[0])
+    print(intersection_of_edges)
+    i = 0
+    while i <= (kmax - kmin) and len(intersection_of_edges) != 0:
+        g_i = Graphs[i]
+        intersection_of_edges = intersection_of_edges & set(g_i.edges)
+        i += 1
+
+    print(f"The final intersection of edges {intersection_of_edges}")
+    print("Cleaning up the edge set to create the final graph")
+    ess_list = list(intersection_of_edges)
+    g = networkx.DiGraph(ess_list)
+
+    print("Looking for strongly connected components")
+    for scc in networkx.strongly_connected_components(g):
+        l1 = [num for num in scc]
+        l2 = [str(scc)[1:len(str(scc)) - 1] for i in range(len(scc))]  # removing the curly brackets
+        mapping = dict(zip(l1,
+                           l2))  # here we use zip to label the nodes in the same scc to have labels of all the nodes in the scc
+        g = networkx.relabel_nodes(g,
+                                   mapping)  # once you call the relabel_nodes, nodes with same label in the new mapping collapses
+        # note that this automatically updates any old edges that we had between nodes with in the scc and going in/out to them
+
+    # Enforce that there are no self-loop (reflexive) edges in the graph
+    print("Removing self edges")
+    g.remove_edges_from(networkx.selfloop_edges(g))
+
+    # Enforce transitive property of the partial order relation
+    print("Removing transitive edges")
+    g = networkx.transitive_reduction(g)
+
+    print(g.edges)
+
+    # TODO: For each edge in the create label.
+    find_the_mutation_labels(parameters, g)
+
+    add_info_about_final_graph(g, outputName, kmax, results_folder)
 
 
 if __name__ == '__main__':
