@@ -468,7 +468,7 @@ def main():
         print(f"Value of k is : {k} and {df.head()}")
         print(f"Number of rows {parameters['numofrows']}")
         print(f"Number of rows {parameters['numofmutations']}")
-        parameters["count"] = 0
+        parameters['count'] = 0
         print(f"Setting the count variable to {parameters['count']}")
         fileResults = outputName + "." + str(k) + ".esspairs" + ".txt"
         print(f"The essential pairs will be written to {fileResults}")
@@ -487,7 +487,7 @@ def main():
             f.write(f"k value: {k}\n")
             f.write(f"n (number of samples): {n}\n")
             f.write(f"m (number of mutations): {m}\n")
-            f.write(f"EssILP calls: {parameters["count"]}\n")
+            f.write(f"EssILP calls: {parameters['count']}\n")
             f.write(f"Runtime: {end_time - start_time} seconds\n")
             f.write(f"Number of Nodes: {Graph_k.number_of_nodes()}\n")
             # f.write(f"Poset Width: {Width(Graph)}\n")
