@@ -8,6 +8,7 @@ import time
 import networkx
 import pandas as pd
 from gurobipy import *
+import itertools
 
 
 def increment_counter(parameters: dict, key: str):
@@ -229,9 +230,16 @@ def calculate_essential_for_given_k(k: int, parameters: dict):
     G.add_nodes_from(S)
     # Adding self edges
     G.add_edges_from((node, node) for node in G.nodes)
-    for u in S:
-        V = list(range(D.shape[0]))
-        EssPairs(parameters, k, u, V, G, sig)
+    disable_gt = parameters["disable_gt"]
+    if not disable_gt:
+        for u in S:
+            V = list(range(D.shape[0]))
+            EssPairs(parameters, k, u, V, G, sig)
+    else:
+        comb_n_c_2 = itertools.combinations(S, 2)
+        for (u, v) in comb_n_c_2:
+            EssPairs(parameters, k, u, [v], G, sig)
+            EssPairs(parameters, k, v, [u], G, sig)
 
     return G, sig
 
@@ -428,6 +436,7 @@ def main():
     parser.add_argument('-print_trace_of_constraint', action='store_true', help='Increase the output verbosity of '
                                                                                 'constraints')
     parser.add_argument('-timeout', type=float, default=float('inf'), help="Timeout value for ILP calls")
+    parser.add_argument('-disable_gt', action='store_true', help="diable group testing")
     args = parser.parse_args()
 
     print(f"Input file: {args.inputFile}")
@@ -436,6 +445,7 @@ def main():
     print(f"Result folder name {args.result_folder}")
     print(f"Verbosity: {args.verbose}")
     print(f"Print Trace Verbosity: {args.print_trace_of_constraint}")
+    print(f"Group testing disabled: {args.disable_gt}")
     print(f"ILP timeout: {args.timeout}")
 
     fileName = args.inputFile
@@ -460,7 +470,8 @@ def main():
     m = D.shape[1]  # number of mutations
 
     parameters = {"fileName": fileName, "kmin": kmin, "kmax": kmax, "verbose": verbose, "ilp_timeout": ilp_timeout,
-                  "print_trace": print_trace, "data": D, "numofrows": n, "numofmutations": m, "dataframe": df}
+                  "print_trace": print_trace, "data": D, "numofrows": n, "numofmutations": m, "dataframe": df,
+                  "disable_gt": args.disable_gt}
 
     # now we need to run the program for k = kmin to kmax and generate the graphs.
     Graphs = []
