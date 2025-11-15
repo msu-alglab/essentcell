@@ -1,3 +1,45 @@
+# EssentCell
+
+Cancer is an evolutionary disease. As cells multiply, they can take on new mutations, and through the accumulation of those mutations, they can become cancerous. Tracking this evolution is helpful for understanding how the disease progresses and the most effective ways to treat it. We model this evolution in diagrams called phylogenetic trees. Much like a family tree, a phylogenetic tree depicts the relationships between generations of cells. These models depend on taking physical samples from cancer patients.
+
+But, these samples are imperfect, often leading to multiple phylogenetic trees. EssentCell finds the lineages that stay consistent among all optimal phylogenetic trees. These essential relations provide insight into the most probable ancestral relationships, painting a more precise picture of a tumor's evolutionary history.
+
+## Content
+  1. [Getting started](#start)
+     * [Dependencies](#dep)
+  2. [Usage instructions](#usage)
+     * [I/O formats](#io)
+     * [Example](#example)
+
+
+<a name="start"></a>
+## Getting started
+
+EssentCell is implemented using python.
+
+<a name="dep"></a>
+
+### Dependencies  
+
+EssentCell has the following dependencies
+ * Gurobi 11.0.2
+ * NumPy 1.26.3
+ * Pandas 2.2.0
+ * NetworkX 3.2.1
+
+<a name="usage"></a>
+## Usage Instructions
+
+<a name="io"></a>
+### I/O formats
+The input to EssentCell is a .csv file that contains n rows and m columns where n is the the number of single-cells and m is the number of mutations.  All entries in the .csv file should be either 1 if mutation j is present in cell i or 0 if mutation j is not present in cell i. Missing entries should be indicated by -1.  
+
+The output options are:
+There will be several output files created by the program.
+
+
+
+
 TODOS:
 - Change code to handle the missing data.
 - Change constraint 8 to handle a single z_i (new method) 
