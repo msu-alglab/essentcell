@@ -46,7 +46,8 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  -result_folder        The result folder name; by default result folder is "results_default". Inside the result_folder, program will create another folder using the input file name excluding .csv
+  -result_folder RESULT_FOLDER
+                        The result folder name; by default result folder is "results_default". Inside the result_folder, program will create another folder using the input file name excluding .csv
                         Output files corresponding to the input file will reside in this folder. 
   --verbose             Increase output verbosity; This will ensure that the number of ILP calls and runtime are persist in an output file.
   -print_trace_of_constraint
