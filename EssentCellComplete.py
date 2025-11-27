@@ -545,7 +545,6 @@ def main():
 
     print(g.edges)
 
-    # TODO: For each edge in the create label.
     find_the_mutation_labels(parameters, g)
 
     add_info_about_final_graph(g, outputName, kmax, results_folder)
