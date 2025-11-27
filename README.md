@@ -122,6 +122,13 @@ optional arguments:
 
 ```
 
+Example usage:
+
+```
+python generategraph.py Patient2.csv 2 --verbose -node_fill_color None -min_node_size 2 -max_number_of_mutation_labels 1
+```
+
+This command will output **Patient2_kappa_2.pdf** that contains the final graph.
 
 
 TODOS:
