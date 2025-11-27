@@ -84,9 +84,43 @@ Next, smallest.sorted_kappa_2.graph_info.txt contains intersection graph, which 
 
 Finally, smallest.sorted_kappa_2.graph_persist.txt contains the same graph but with mutation labels.
 
-The output options are:
-There will be several output files created by the program.
+Another example:
 
+```
+python EssentCell.py Patient2.csv  0  2 -result_folder Results/Results_"$current_month"_"$current_day" --verbose -timeout 300
+```
+
+
+The users can use **generategraph.py** to create essential relation graph as well. In order to use this script first, use the previous script to generate the necessary output files. Then create a new file called mutations.txt that contains the mutation mutation labels. In this file each row should contain a column id and mutation label seperated by blank space. The program will read this file to output the necessary edge label values with mutation names. Please check the output folders for example **mutations.txt** file.
+
+
+```
+usage: generategraph.py [-h] [-node_fill_color NODE_FILL_COLOR] [-result_folder RESULT_FOLDER] [--verbose] [-change_border_size] [-change_node_fill_color_intensity] [-min_node_size MIN_NODE_SIZE]
+                        [-cluster_prefix CLUSTER_PREFIX] [-do_not_keep_connections_when_deleting] [-max_number_of_mutation_labels MAX_NUMBER_OF_MUTATION_LABELS]
+                        inputFile kappa
+
+Arguments for the dot graph creation program
+
+positional arguments:
+  inputFile             Input the final graph with mutation labels; the user should enter the input file name along with .csv extension.
+  kappa                 kappa value for the input program
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -node_fill_color NODE_FILL_COLOR
+  -result_folder RESULT_FOLDER
+                        This arguement should be pointing to the result folder where your output files are residing. Inside this folder there should be another folder named using the input file name excluding the                         .csv extension. By default this folder is results_default.
+  -min_node_size MIN_NODE_SIZE
+                        Minimum node size to be included in the graph. This argument looks at nodes that corresponds to clusters of size less than this threshold and remove it from the graph.
+                        This arguement is added to improve the clarity of the final diagram. If the user wishes to keep all nodes, then ignore this argument.
+  -cluster_prefix CLUSTER_PREFIX
+                        Cluster prefix to be used when generating the graph; This prefix will be used to name the names of the nodes, and cluster id will be added after cluster prefix.
+  -do_not_keep_connections_when_deleting
+                        This would ensure that we keep the connections of edges when we delete nodes that are too small; If the user do not want to keep the connections that goes through nodes that are removed                            using earlier arguement, then make sure this flag is enabled. By default, the program keeps the connections that goes through deleted nodes. This option is here to improve the clarity of                           the final figure.
+  -max_number_of_mutation_labels MAX_NUMBER_OF_MUTATION_LABELS
+                        Maximum number of mutation labels in the final graph. Default value is to include all mutation labels. Any edge label that contains more than max number of edge labels will not be                                  displayed in the final graph. This option is there to improve the clarity of the figure.
+
+```
 
 
 
