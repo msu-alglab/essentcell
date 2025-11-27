@@ -41,21 +41,47 @@ Arguments for the EssentCell program
 
 positional arguments:
   inputFile             Input file to the program; the file should be on the same folder that the EssentCell.py script resides.
-  kmin                  k min value for the input program; this is the minimum fixed **1 -> 0** bit flips that will be used by the program. 
-  kmax                  k max value for the input program; this is the maximum fixed **1 -> 0** bit flips that will be used by the program. Note that **kmin <= kmax**.
+  kmin                  k min value for the input program; this is the minimum fixed 1 -> 0 bit flips that will be used by the program. 
+  kmax                  k max value for the input program; this is the maximum fixed 1 -> 0 bit flips that will be used by the program. Note that kmin <= kmax
 
 optional arguments:
   -h, --help            show this help message and exit
-  -result_folder RESULT_FOLDER
-                        The result folder name; by default result folder is "results_default". Inside the result_folder, program will create another folder using the input file name **excluding ".csv"*.
+  -result_folder        The result folder name; by default result folder is "results_default". Inside the result_folder, program will create another folder using the input file name excluding .csv
                         Output files corresponding to the input file will reside in this folder. 
-  --verbose             Increase output verbosity
+  --verbose             Increase output verbosity; This will ensure that the number of ILP calls and runtime are persist in an output file.
   -print_trace_of_constraint
                         Increase the output verbosity of gurobi ILP creations and prints out the constraints created by the ILP calls
-  -timeout TIMEOUT      Timeout value for ILP calls; this should be input in seconds. Note that the timeout value is only considered for ILP calls that ivolves groups larger than 2. When we run a ILP calls between two cells, the timeout value will be ignored as we need to ensure that the ILP call is either feasible or infeasible. By default timeout value is infinity.. 
+  -timeout TIMEOUT      Timeout value for ILP calls; this should be given in seconds. Note that the timeout value is only considered for ILP calls that ivolves groups larger than 2. When we run a ILP calls between two cells, the timeout value will be ignored as we need to ensure that the ILP call is either feasible or infeasible. By default timeout value is infinity.
   -disable_gt           diable group testing; if the user desires not to use group testing, then enable this flag.
 
 ```
+<a name="example"></a>
+### Example
+
+Following is an example on how to run the script using **smallest.sorted.csv** as the input file.
+
+```
+python EssentCell.py smallest.sorted.csv 0 2 --verbose -timeout 300
+```
+
+This command will input the **smallest.sorted.csv** file that is residing in the root folder and run EssentCell program for k=0, k=1, and k=2 values. Then the program will create the following files.
+- k = 0
+  * smallest.sorted.0.esspairs.txt
+  * smallest.sorted.0.esspairs.verbose.txt
+- k = 1
+  * smallest.sorted.0.esspairs.txt
+  * smallest.sorted.0.esspairs.verbose.txt
+- k = 2
+  * smallest.sorted.0.esspairs.txt
+  * smallest.sorted.0.esspairs.verbose.txt
+- smallest.sorted_kappa_2.graph_info.txt
+- smallest.sorted_kappa_2.graph_persist.txt
+
+For each k value, **smallest.sorted.k.esspairs.txt** file contains the essential relation graph as set of edge list (before collapsing strongly connected components). The **smallest.sorted.k.esspairs.verbose.txt** files contain the extra information such as how many ILP calls were called and the total runtime for each particular **k** value along with other information about the graph. Please take a look at the example output and actual result outputs for more details.
+
+Next, smallest.sorted_kappa_2.graph_info.txt contains intersection graph, which contains the graph that has edges appearing in all essential relation graphs from k=min to k=kmax. Note that we further process this graph before persisting, i.e., we collapse the strongly connected components and perform transitive reduction.
+
+Finally, smallest.sorted_kappa_2.graph_persist.txt contains the same graph but with mutation labels.
 
 The output options are:
 There will be several output files created by the program.
