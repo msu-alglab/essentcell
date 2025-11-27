@@ -95,7 +95,7 @@ The users can use **generategraph.py** to create essential relation graph as wel
 
 
 ```
-usage: generategraph.py [-h] [-node_fill_color NODE_FILL_COLOR] [-result_folder RESULT_FOLDER] [--verbose] [-change_border_size] [-change_node_fill_color_intensity] [-min_node_size MIN_NODE_SIZE]
+usage: generategraph.py [-h] [-node_fill_color NODE_FILL_COLOR] [-result_folder RESULT_FOLDER] [--verbose] [-min_node_size MIN_NODE_SIZE]
                         [-cluster_prefix CLUSTER_PREFIX] [-do_not_keep_connections_when_deleting] [-max_number_of_mutation_labels MAX_NUMBER_OF_MUTATION_LABELS]
                         inputFile kappa
 
