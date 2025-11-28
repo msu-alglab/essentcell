@@ -73,7 +73,9 @@ def FindOpt(parameters: dict, k: int) -> float:
         model.optimize()
         time_ilp_end = time.time()
         print(f"ILP OPT time {time_ilp_end - time_ilp_start} seconds")
-        model.write("model.initial.lp")
+        # verbose = parameters["verbose"]
+        # if verbose:
+        #     model.write("model.initial.lp")
         sig = model.ObjVal
         print(f"sig: {sig}")
         return sig
