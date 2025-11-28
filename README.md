@@ -59,7 +59,7 @@ optional arguments:
 <a name="example"></a>
 ### Example
 
-Following is an example on how to run the script using **smallest.sorted.csv** as the input file.
+Following is an example on how to run the script using **smallest.sorted.csv** as the input file. The user must run the EssentCell.py file by going into the folder that the **EssentCell.py** resides in. The input files to this script must reside in the same folder as well.
 
 ```
 python EssentCell.py smallest.sorted.csv 0 2 --verbose -timeout 300
@@ -111,7 +111,7 @@ Refer the outout folder result_wo_gt for the output files.
 
 #### Example usage for generating the final essential relation graph
 
-The users can use **generategraph.py** to create essential relation graph as well. In order to use this script first, use the previous script to generate the necessary output files. Then create a new file called mutations.txt that contains the mutation mutation labels. In this file each row should contain a column id and mutation label seperated by blank space. The program will read this file to output the necessary edge label values with mutation names. Please check the output folders for example **mutations.txt** file.
+The users can use **generategraph.py** to create essential relation graph as well. In order to use this script first, use the previous script to generate the necessary output files. Then create a new file called mutations.txt that contains the mutation mutation labels. In this file each row should contain a column id and mutation label seperated by blank space. The program will read this file to output the necessary edge label values with mutation names. Please check the output folders for example **mutations.txt** file. **This file must reside in the output folder that corresponds to its input csv file.**
 
 
 ```
@@ -147,6 +147,9 @@ Example usage:
 ```
 python generategraph.py Patient2.csv 2 --verbose -node_fill_color None -min_node_size 2 -max_number_of_mutation_labels 1
 ```
+
+Note that **[mutation.txt](results_default/Patient2/mutations.txt)** file for the Patient2.csv resides in results_default/Patient2 folder. 
+
 Two files will be created by this script.
 - Patient2_kappa_2.graph_cluster_id.txt
     * This program will generate an additional file named **smallest.sorted_kappa_2.graph_cluster_id.txt** that contains the information about the cluster ids and cells allocated to each of these clusters.
@@ -156,6 +159,13 @@ Two files will be created by this script.
     * [Refer the following file](results_default/Patient2/Patient2_kappa_2.pdf)
 
 If the user wishes to **customize the final graph**, then the user can edit the **generategraph.py** using graphviz attributes to generate the desired output graph.
+
+Another example:
+
+```
+python generategraph.py smallest.sorted.csv 2 --verbose -result_folder result_wo_gt -node_fill_color None -min_node_size 0 -max_number_of_mutation_labels 6
+```
+In this example, we have inputted "result_wo_gt" as the input and output folder for the generategraph.py. Note that **[mutations.txt](result_wo_gt/smallest.sorted/mutations.txt)** exists in the corresponding subfolder in **result_wo_gt**.
 
 TODOS:
 - Change code to handle the missing data.
