@@ -183,31 +183,31 @@ optional arguments:
 
 ```
 
-Example usage:
+#### Example: generating final graph
 
 ```
 python generategraph.py Patient2.csv 2 --verbose -node_fill_color None -min_node_size 2 -max_number_of_mutation_labels 1
 ```
 
-Note that **[mutation.txt](results_default/Patient2/mutations.txt)** file for the Patient2.csv resides in results_default/Patient2 folder. 
+Note that **[mutation.txt](results_default/Patient2/mutations.txt)** file for the Patient2.csv is located in ```results_default/Patient2``` folder. 
 
-Two files will be created by this script.
-- Patient2_kappa_2.graph_cluster_id.txt
-    * This program will generate an additional file named **smallest.sorted_kappa_2.graph_cluster_id.txt** that contains the information about the cluster ids and cells allocated to each of these clusters.
+Running generategraph.py will produce two output files:
+- ```Patient2_kappa_2.graph_cluster_id.txt```
+    * Contains cluster IDs and the cells assigned to each cluster.
     * [Refer the following file](https://github.com/msu-alglab/essentcell/blob/main/results_default/Patient2/Patient2_kappa_2.graph_cluster_id.txt)
 - Patient2_kappa_2.pdf
-    * contains the final output graph.
+    * Contains the final essential relation graph.
     * [Refer the following file](results_default/Patient2/Patient2_kappa_2.pdf)
 
-If the user wishes to **customize the final graph**, then the user can edit the **generategraph.py** using graphviz attributes to generate the desired output graph.
+If the user wishes to **customize the final graph**, you can modify ```generategraph.py``` using Graphviz attributes to adjust the output according to your preferences.
 
-Another example:
+#### Another example:
 
 ```
 python generategraph.py smallest.sorted.csv 2 --verbose -result_folder result_wo_gt -node_fill_color None -min_node_size 0 -max_number_of_mutation_labels 6
 ```
-In this example, we have inputted "result_wo_gt" as the input and output folder for the generategraph.py. Note that **[mutations.txt](result_wo_gt/smallest.sorted/mutations.txt)** exists in the corresponding subfolder in **result_wo_gt**.
-
+In this example, the folder ```result_wo_gt``` is used as both the input and output directory for ```generategraph.py```.
+Note that ```mutations.txt``` must exist in the corresponding subfolder inside ```result_wo_gt``` for the script to label the graph nodes correctly.
 
 ## References
 \[1\] Gawad, C., Koh, W. and Quake, S.R., 2014. Dissecting the clonal origins of childhood acute lymphoblastic leukemia by single-cell genomics. Proceedings of the National Academy of Sciences, 111(50), pp.17947-17952.
