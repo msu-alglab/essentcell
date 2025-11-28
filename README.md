@@ -89,6 +89,16 @@ Another example:
 python EssentCell.py Patient2.csv  0  2 -result_folder Results/Results_"$current_month"_"$current_day" --verbose -timeout 300
 ```
 
+User can structure the result folder by passing variables, when calling the script inside shell script.
+
+Example that uses an input with missing data:
+
+```
+python EssentCell.py smallest.sorted_with_missing.csv  0  2 --verbose
+```
+
+We have included a example input file called **smallest.sorted_with_missing.csv** with missing data entries. Note that this is a random file generated with missing entries. Check the corresponding output folder for the input file.
+
 
 The users can use **generategraph.py** to create essential relation graph as well. In order to use this script first, use the previous script to generate the necessary output files. Then create a new file called mutations.txt that contains the mutation mutation labels. In this file each row should contain a column id and mutation label seperated by blank space. The program will read this file to output the necessary edge label values with mutation names. Please check the output folders for example **mutations.txt** file.
 
