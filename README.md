@@ -171,16 +171,15 @@ optional arguments:
   -h, --help            show this help message and exit
   -node_fill_color NODE_FILL_COLOR
   -result_folder RESULT_FOLDER
-                        This arguement should be pointing to the result folder where your output files are residing. Inside this folder there should be another folder named using the input file name excluding the                         .csv extension. By default this folder is results_default.
+                        This arguement should be pointing to the result folder where your output files are residing. Inside this folder there should be another folder named using the input file name excluding the .csv extension. By default this folder is results_default.
   -min_node_size MIN_NODE_SIZE
-                        Minimum node size to be included in the graph. This argument looks at nodes that corresponds to clusters of size less than this threshold and remove it from the graph.
-                        This arguement is added to improve the clarity of the final diagram. If the user wishes to keep all nodes, then ignore this argument.
+                        Minimum node size to be included in the graph. This argument looks at nodes that corresponds to clusters of size less than this threshold and remove it from the graph. This arguement is added to improve the clarity of the final diagram. If the user wishes to keep all nodes, then ignore this argument.
   -cluster_prefix CLUSTER_PREFIX
                         Cluster prefix to be used when generating the graph; This prefix will be used to name the names of the nodes, and cluster id will be added after cluster prefix.
   -do_not_keep_connections_when_deleting
-                        This would ensure that we keep the connections of edges when we delete nodes that are too small; If the user do not want to keep the connections that goes through nodes that are removed                            using earlier arguement, then make sure this flag is enabled. By default, the program keeps the connections that goes through deleted nodes. This option is here to improve the clarity of                           the final figure.
+                        This would ensure that we keep the connections of edges when we delete nodes that are too small; If the user do not want to keep the connections that goes through nodes that are removed using earlier arguement, then make sure this flag is enabled. By default, the program keeps the connections that goes through deleted nodes. This option is here to improve the clarity of the final figure.
   -max_number_of_mutation_labels MAX_NUMBER_OF_MUTATION_LABELS
-                        Maximum number of mutation labels in the final graph. Default value is to include all mutation labels. Any edge label that contains more than max number of edge labels will not be                                  displayed in the final graph. This option is there to improve the clarity of the figure.
+                        Maximum number of mutation labels in the final graph. Default value is to include all mutation labels. Any edge label that contains more than max number of edge labels will not be displayed in the final graph. This option is there to improve the clarity of the figure.
 
 ```
 
