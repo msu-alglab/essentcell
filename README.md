@@ -81,7 +81,9 @@ To execute the program:
 python EssentCell.py smallest.sorted.csv 0 2 --verbose -timeout 300
 ```
 
-This command will input the **smallest.sorted.csv** file that is residing in the root folder and run EssentCell program for k=0, k=1, and k=2 values. The timeout for ILP calls for groups larger than 2 is 300 seconds. The output files will be created in a folder named **results_default** since we did not specify a output folder. This will be created in the working directory. Inside the **results_default** program will create a subfolder named **smallest.sorted** and this folder will keep all the output files for the input **smallest.sorted.csv**.
+This command runs the EssentCell program using the ```smallest.sorted.csv``` file located in the root directory. The script will execute the analysis for ```k = 0, k = 1, and k = 2```. For groups larger than size 2, ILP calls are limited to a 300-second timeout.
+
+Since no custom output directory was specified, the program will create a default folder named ```results_default``` in the working directory. Inside this folder, a subdirectory named ```smallest.sorted``` will be generated to store all output files associated with the ```smallest.sorted.csv``` input.
 
 Then the program will create the following files.
 - k = 0
@@ -96,36 +98,48 @@ Then the program will create the following files.
 - [smallest.sorted_kappa_2.graph_info.txt](results_default/smallest.sorted/smallest.sorted_kappa_2.graph_info.txt)
 - [smallest.sorted_kappa_2.graph_persist.txt](results_default/smallest.sorted/smallest.sorted_kappa_2.graph_persist.txt)
 
-For each k value, **smallest.sorted.k.esspairs.txt** file contains the essential relation graph as set of edge list (before collapsing strongly connected components). The **smallest.sorted.k.esspairs.verbose.txt** files contain the extra information such as how many ILP calls were called and the total runtime for each particular **k** value along with other information about the graph. Please take a look at the example output and actual result outputs for more details.
+For each value of ```k```, the file ```smallest.sorted.k.esspairs.txt``` contains the essential relation graph represented as an edge list (prior to collapsing strongly connected components).
+The file ```smallest.sorted.k.esspairs.verbose.txt``` includes additional details such as the number of ILP calls made, total runtime for that specific ```k``` value, and other graph-related metadata.
+For a clearer understanding of the output format and contents, please refer to the example output and the actual generated result files.
 
-Next, smallest.sorted_kappa_2.graph_info.txt contains intersection graph, which contains the graph that has edges appearing in all essential relation graphs from k=min to k=kmax. Note that we further process this graph before persisting, i.e., we collapse the strongly connected components and perform transitive reduction.
-Finally, smallest.sorted_kappa_2.graph_persist.txt contains the same graph but with mutation labels.
+The file ```smallest.sorted_kappa_2.graph_info.txt``` contains the intersection graph, which includes edges present in all essential relation graphs from ```k = min to k = kmax```. Before saving, this graph is further processed by collapsing strongly connected components and performing a transitive reduction.
 
-Note that if you run this command multiple times **smallest.sorted.k.esspairs.txt** files will be created from scratch while the data to the **smallest.sorted.k.esspairs.verbose.txt** files **will be appended at the end.** As you can see the verbose files contain records of multiple runs. If the user does not wish to see this behaviour, they can delete the verbose files before running the command again.
+The file ```smallest.sorted_kappa_2.graph_persist.txt``` contains the same graph, but with mutation labels included.
 
-Another example:
+Important: If you run the command multiple times:
+
+```smallest.sorted.k.esspairs.txt``` files are recreated from scratch on each run.
+
+Data in ```smallest.sorted.k.esspairs.verbose.txt``` files is appended, preserving records from previous runs.
+
+If you prefer to start fresh without appending, you can delete the verbose files before running the command again.
+
+#### Another example:
 
 ```
 python EssentCell.py Patient2.csv  0  2 -result_folder Results/Results_"$current_month"_"$current_day" --verbose -timeout 300
 ```
 
-User can structure the result folder by passing variables, when calling the script inside shell script.
+Users can dynamically structure the output folder by passing variables when running the script from a shell script.
 
-Example that uses an input with missing data:
+
+#### Example Using an Input with Missing Data
 
 ```
 python EssentCell.py smallest.sorted_with_missing.csv  0  2 --verbose
 ```
+We provide an example input file, ```smallest.sorted_with_missing.csv```, which contains randomly generated missing data entries. The program will handle these missing values, and the corresponding output files can be found in the output folder associated with this input.
 
-We have included a example input file called **smallest.sorted_with_missing.csv** with missing data entries. Note that this is a random file generated with missing entries. Check the corresponding output folder for the input file.
+#### Example using an Input and computing essential relations without group testing
 
-If the user wishes to not use group testing for computing the essential relation, user can pass a special flag to the script and the program will use the naive approach to compute the essential relation. Following is an example usage on how to pass that flag. Here we put the result in a new folder called **result_wo_gt**.
+If you want to compute essential relations without using group testing, you can pass a special flag (```-disable_gt```) to the script. This instructs the program to use the naive approach instead.
+In this example, the output is stored in a new folder named ```result_wo_gt```.
 
 ```
 python smallest.sorted.csv 0 2 -result_folder result_wo_gt --verbose -disable_gt
 ```
 
-Refer the outout folder result_wo_gt for the output files.
+Refer the outout folder ```result_wo_gt``` for the output files: [result_wo_gt](result_wo_gt).
 
 #### Example usage for generating the final essential relation graph
 
