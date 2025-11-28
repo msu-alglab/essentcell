@@ -81,7 +81,6 @@ This command will input the **smallest.sorted.csv** file that is residing in the
 For each k value, **smallest.sorted.k.esspairs.txt** file contains the essential relation graph as set of edge list (before collapsing strongly connected components). The **smallest.sorted.k.esspairs.verbose.txt** files contain the extra information such as how many ILP calls were called and the total runtime for each particular **k** value along with other information about the graph. Please take a look at the example output and actual result outputs for more details.
 
 Next, smallest.sorted_kappa_2.graph_info.txt contains intersection graph, which contains the graph that has edges appearing in all essential relation graphs from k=min to k=kmax. Note that we further process this graph before persisting, i.e., we collapse the strongly connected components and perform transitive reduction.
-
 Finally, smallest.sorted_kappa_2.graph_persist.txt contains the same graph but with mutation labels.
 
 Another example:
@@ -127,9 +126,11 @@ Example usage:
 ```
 python generategraph.py Patient2.csv 2 --verbose -node_fill_color None -min_node_size 2 -max_number_of_mutation_labels 1
 ```
-
-This command will output **Patient2_kappa_2.pdf** that contains the final graph.
-
+Two files will be created by this script.
+- Patient2_kappa_2.graph_cluster_id.txt
+    * his program will generate an additional file named **smallest.sorted_kappa_2.graph_cluster_id.txt** that contains the information about the cluster ids and cells allocated to each of these clusters.
+- Patient2_kappa_2.pdf
+    * contains the final output graph.
 
 TODOS:
 - Change code to handle the missing data.
