@@ -59,15 +59,23 @@ optional arguments:
 <a name="example"></a>
 ### Examples
 
-We have included two test input files for the user namely [smallest.sorted.csv](smallest.sorted.csv) and [smallest.sorted_with_missing.csv](smallest.sorted_with_missing.csv). These files do not represent actual biological data, rather they are example files for the user to try the program.
+We provide two example input files for testing:
+- [smallest.sorted.csv](smallest.sorted.csv)
+- [smallest.sorted_with_missing.csv](smallest.sorted_with_missing.csv)
 
-Following is an example on how to run the script using **smallest.sorted.csv** as the input file. The user must run the EssentCell.py file by going into the folder that the **EssentCell.py** resides in. The input files to this script must reside in the same folder as well.
+These files are not real biological datasets. They are included only to help users test and explore the program.
+
+Below is an example of how to run the script using smallest.sorted.csv as the input file.
+To execute the program:
+* Navigate to the directory where EssentCell.py is located.
+* Ensure that the input file is in the same directory.
+* Run the script using a command such as:
 
 ```
 python EssentCell.py smallest.sorted.csv 0 2 --verbose -timeout 300
 ```
 
-This command will input the **smallest.sorted.csv** file that is residing in the root folder and run EssentCell program for k=0, k=1, and k=2 values. Then the program will create the following files.
+This command will input the **smallest.sorted.csv** file that is residing in the root folder and run EssentCell program for k=0, k=1, and k=2 values. The timeout for ILP calls for groups larger than 2 is 300 seconds. Then the program will create the following files.
 - k = 0
   * [smallest.sorted.0.esspairs.txt](results_default/smallest.sorted/smallest.sorted.0.esspairs.txt)
   * [smallest.sorted.0.esspairs.verbose.txt](results_default/smallest.sorted/smallest.sorted.0.esspairs.verbose.txt)
