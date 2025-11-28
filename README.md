@@ -67,21 +67,23 @@ python EssentCell.py smallest.sorted.csv 0 2 --verbose -timeout 300
 
 This command will input the **smallest.sorted.csv** file that is residing in the root folder and run EssentCell program for k=0, k=1, and k=2 values. Then the program will create the following files.
 - k = 0
-  * smallest.sorted.0.esspairs.txt
-  * smallest.sorted.0.esspairs.verbose.txt
+  * [smallest.sorted.0.esspairs.txt](results_default/smallest.sorted/smallest.sorted.0.esspairs.txt)
+  * [smallest.sorted.0.esspairs.verbose.txt](results_default/smallest.sorted/smallest.sorted.0.esspairs.verbose.txt)
 - k = 1
-  * smallest.sorted.0.esspairs.txt
-  * smallest.sorted.0.esspairs.verbose.txt
+  * [smallest.sorted.1.esspairs.txt](results_default/smallest.sorted/smallest.sorted.1.esspairs.txt)
+  * [smallest.sorted.1.esspairs.verbose.txt](results_default/smallest.sorted/smallest.sorted.1.esspairs.verbose.txt)
 - k = 2
-  * smallest.sorted.0.esspairs.txt
-  * smallest.sorted.0.esspairs.verbose.txt
-- smallest.sorted_kappa_2.graph_info.txt
-- smallest.sorted_kappa_2.graph_persist.txt
+  * [smallest.sorted.2.esspairs.txt](results_default/smallest.sorted/smallest.sorted.1.esspairs.txt)
+  * [smallest.sorted.2.esspairs.verbose.txt](results_default/smallest.sorted/smallest.sorted.1.esspairs.verbose.txt)
+- [smallest.sorted_kappa_2.graph_info.txt](results_default/smallest.sorted/smallest.sorted_kappa_2.graph_info.txt)
+- [smallest.sorted_kappa_2.graph_persist.txt](results_default/smallest.sorted/smallest.sorted_kappa_2.graph_persist.txt)
 
 For each k value, **smallest.sorted.k.esspairs.txt** file contains the essential relation graph as set of edge list (before collapsing strongly connected components). The **smallest.sorted.k.esspairs.verbose.txt** files contain the extra information such as how many ILP calls were called and the total runtime for each particular **k** value along with other information about the graph. Please take a look at the example output and actual result outputs for more details.
 
 Next, smallest.sorted_kappa_2.graph_info.txt contains intersection graph, which contains the graph that has edges appearing in all essential relation graphs from k=min to k=kmax. Note that we further process this graph before persisting, i.e., we collapse the strongly connected components and perform transitive reduction.
 Finally, smallest.sorted_kappa_2.graph_persist.txt contains the same graph but with mutation labels.
+
+Note that if you run this command multiple times **smallest.sorted.k.esspairs.txt** files will be created from scratch while the data to the **smallest.sorted.k.esspairs.verbose.txt** files **will be appended at the end.** As you can see the verbose files contain records of multiple runs. If the user does not wish to see this behaviour, they can delete the verbose files before running the command again.
 
 Another example:
 
