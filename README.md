@@ -127,7 +127,7 @@ Example usage:
 python generategraph.py Patient2.csv 2 --verbose -node_fill_color None -min_node_size 2 -max_number_of_mutation_labels 1
 ```
 Two files will be created by this script.
-- smallest.sorted_kappa_2.graph_cluster_id.txt
+- Patient2_kappa_2.graph_cluster_id.txt
     * his program will generate an additional file named **smallest.sorted_kappa_2.graph_cluster_id.txt** that contains the information about the cluster ids and cells allocated to each of these clusters.
 - Patient2_kappa_2.pdf
     * contains the final output graph.
