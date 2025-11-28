@@ -141,10 +141,20 @@ python smallest.sorted.csv 0 2 -result_folder result_wo_gt --verbose -disable_gt
 
 Refer the outout folder ```result_wo_gt``` for the output files: [result_wo_gt](result_wo_gt).
 
-#### Example usage for generating the final essential relation graph
+#### Example: Generating the Final Essential Relation Graph
+You can use ```generategraph.py``` to create the final essential relation graph. To use this script:
+1. First, run the main EssentCell script to generate the necessary output files.
+2. Create a file named mutations.txt containing the mutation labels. Each row should have a column ID and mutation label, separated by a space. Start with column id 0.
 
-The users can use **generategraph.py** to create essential relation graph as well. In order to use this script first, use the previous script to generate the necessary output files. Then create a new file called mutations.txt that contains the mutation mutation labels. In this file each row should contain a column id and mutation label seperated by blank space. The program will read this file to output the necessary edge label values with mutation names. Please check the output folders for example **mutations.txt** file. **This file must reside in the output folder that corresponds to its input csv file.**
+Example format:
+```
+0 TP53
+1 KRAS
+2 EGFR
+```
+3. Place ```mutations.txt``` in the output folder corresponding to its input CSV file.
 
+The program will read this file to label edges in the graph with the appropriate mutation names. Check the output folders for an example mutations.txt file. Example ```mutations.txt``` can be found [here](results_default/Patient2/mutations.txt).
 
 ```
 usage: generategraph.py [-h] [-node_fill_color NODE_FILL_COLOR] [-result_folder RESULT_FOLDER] [--verbose] [-min_node_size MIN_NODE_SIZE]
