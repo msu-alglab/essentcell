@@ -81,7 +81,9 @@ To execute the program:
 python EssentCell.py smallest.sorted.csv 0 2 --verbose -timeout 300
 ```
 
-This command will input the **smallest.sorted.csv** file that is residing in the root folder and run EssentCell program for k=0, k=1, and k=2 values. The timeout for ILP calls for groups larger than 2 is 300 seconds. Then the program will create the following files.
+This command will input the **smallest.sorted.csv** file that is residing in the root folder and run EssentCell program for k=0, k=1, and k=2 values. The timeout for ILP calls for groups larger than 2 is 300 seconds. The output files will be created in a folder named **results_default** since we did not specify a output folder. This will be created in the working directory. Inside the **results_default** program will create a subfolder named **smallest.sorted** and this folder will keep all the output files for the input **smallest.sorted.csv**.
+
+Then the program will create the following files.
 - k = 0
   * [smallest.sorted.0.esspairs.txt](results_default/smallest.sorted/smallest.sorted.0.esspairs.txt)
   * [smallest.sorted.0.esspairs.verbose.txt](results_default/smallest.sorted/smallest.sorted.0.esspairs.verbose.txt)
