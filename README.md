@@ -9,7 +9,7 @@ But, these samples are imperfect, often leading to multiple phylogenetic trees. 
      * [Dependencies](#dep)
   2. [Usage instructions](#usage)
      * [I/O formats](#io)
-     * [Example](#example)
+     * [Examples](#example)
 
 
 <a name="start"></a>
@@ -57,7 +57,7 @@ optional arguments:
 
 ```
 <a name="example"></a>
-### Example
+### Examples
 
 Following is an example on how to run the script using **smallest.sorted.csv** as the input file. The user must run the EssentCell.py file by going into the folder that the **EssentCell.py** resides in. The input files to this script must reside in the same folder as well.
 
