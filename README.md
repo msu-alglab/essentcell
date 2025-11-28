@@ -65,7 +65,7 @@ We provide two example input files for testing:
 
 These files are not real biological datasets. They are included only to help users test and explore the program.
 
-There are four read biological datasets that we have included in this repository, which was used for experimenting. 
+There are four read biological datasets that we have included in this repository, which were used for the experiments. 
 
 - [Patient2.csv](Patient2.csv) and [Patient6.csv](Patient2.csv) contains the acute lymphoblastic leukemia (ALL) data of Patient 2 and Patient 6 in [1].
 - [ER+](snvdata_Clonal_evo_47n_41m.csv) is an oestrogen-receptor-positive (ER+) breast cancer dataset from [2].
