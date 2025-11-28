@@ -99,6 +99,15 @@ python EssentCell.py smallest.sorted_with_missing.csv  0  2 --verbose
 
 We have included a example input file called **smallest.sorted_with_missing.csv** with missing data entries. Note that this is a random file generated with missing entries. Check the corresponding output folder for the input file.
 
+If the user wishes to not use group testing for computing the essential relation, user can pass a special flag to the script and the program will use the naive approach to compute the essential relation. Following is an example usage on how to pass that flag. Here we put the result in a new folder called **result_wo_gt**.
+
+```
+python smallest.sorted.csv 0 2 -result_folder result_wo_gt --verbose -disable_gt
+```
+
+Refer the outout folder result_wo_gt for the output files.
+
+#### Example usage for generating the final essential relation graph
 
 The users can use **generategraph.py** to create essential relation graph as well. In order to use this script first, use the previous script to generate the necessary output files. Then create a new file called mutations.txt that contains the mutation mutation labels. In this file each row should contain a column id and mutation label seperated by blank space. The program will read this file to output the necessary edge label values with mutation names. Please check the output folders for example **mutations.txt** file.
 
