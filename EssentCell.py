@@ -1,10 +1,5 @@
 """
 @author: Adiesha Liyanage and Brendan Mumey and Braeden Sopp
-Date: 2025-01-07
-Description: Given a positive integer k (pre-determined # of false positive(s)),
-and n x m binary mutation matrix-possibly with missing values, EssentCell_With_GT.py produces the
-corresponding essential order diagram. This information will be written to
-results/inputFile folder.
 """
 import argparse
 import os
@@ -13,47 +8,26 @@ import time
 import networkx
 import pandas as pd
 from gurobipy import *
-
-parser = argparse.ArgumentParser(description="Arguments for the EssentCell program")
-parser.add_argument('inputFile', type=str, help="Sorted Input file to the program")
-parser.add_argument('k', type=int, default=1, help="k value for the input program")
-parser.add_argument('-result_folder', type=str, default="results_default", help="The result folder name")
-parser.add_argument('--verbose', action='store_true', help='Increase output verbosity')
-parser.add_argument('-print_trace_of_constraint', action='store_true', help='Increase the output verbosity of '
-                                                                            'constraints')
-parser.add_argument('-timeout', type=float, default=float('inf'), help="Timeout value for ILP calls")
-args = parser.parse_args()
-print(f"Input file: {args.inputFile}")
-print(f"Value of k: {args.k}")
-print(f"Result folder name {args.result_folder}")
-print(f"Verbosity: {args.verbose}")
-print(f"Print Trace Verbosity: {args.print_trace_of_constraint}")
-print(f"ILP timeout: {args.timeout}")
-
-fileName = args.inputFile
-outputName = fileName[:-4]  # remove the file extension
-k = args.k
-verbose = args.verbose
-print_trace = args.print_trace_of_constraint
-ilp_timeout = args.timeout
-count = 0
-
-df = pd.read_csv(fileName)
-df.index = range(1, len(df) + 1)
-E = df.to_numpy()
-# df.drop_duplicates(inplace=True) //we do not delete duplicates anymore
-D = df.to_numpy()
-
-n = D.shape[0]
-m = D.shape[1]
-
-start_time = time.time()
+import itertools
 
 
-def FindOpt():
+def increment_counter(parameters: dict, key: str):
+    parameters[key] = parameters[key] + 1
+
+
+def split(V):
+    mid = len(V) // 2
+    return V[:mid], V[mid:]
+
+
+def FindOpt(parameters: dict, k: int) -> float:
     """
     Returns sigma, the minimum number of bit flips required to make D conflict-free.
     """
+    n = parameters["numofrows"]
+    m = parameters["numofmutations"]
+    D = parameters["data"]
+    print_trace = parameters["print_trace"]
     try:
         # Silence console output
         # env = Env(empty=True)
@@ -109,47 +83,7 @@ def FindOpt():
         return -1
 
 
-def calculate_essential_for_given_k(k):
-    sig = FindOpt()
-
-    S = list(range(D.shape[0]))
-
-    G = networkx.DiGraph()
-    G.add_nodes_from(S)
-    # Adding self edges
-    G.add_edges_from((node, node) for node in G.nodes)
-    for u in S:
-        V = list(range(D.shape[0]))
-        EssPairs(k, u, V, G, sig)
-
-    return G, sig
-
-
-def EssPairs(k, u, V, G, sig):
-    if u in V:  # removing the self node from V
-        V.remove(u)
-    # we also need to remove vertices v from V, if we know that u <= v
-    # basically , V - out(u)
-    out_neighbors_u = list(G.successors(u))
-    for out_neigh in out_neighbors_u:
-        if out_neigh in V:
-            V.remove(out_neigh)
-    if len(V) > 0 and not test_ESS(k, [u], V, sig):
-        if len(V) == 1:
-            G.add_edge(u, V[0])
-            # self edges are already added
-            in_U = list(G.predecessors(u))
-            out_V = list(G.successors(V[0]))
-            for small_u in in_U:
-                for small_v in out_V:
-                    G.add_edge(small_u, small_v)
-        else:
-            (V_L, V_R) = split(V)
-            EssPairs(k, u, V_L, G, sig)
-            EssPairs(k, u, V_R, G, sig)
-
-
-def test_ESS(k, U, V, sig):
+def test_ESS(parameters: dict, k: int, U, V, sig: float):
     """
     This function takes k, U, V, sig and returns false (in feasible) if \\exists u \\in U: \\exists v \\in V: u \\leq_{e} v
 
@@ -164,11 +98,14 @@ def test_ESS(k, U, V, sig):
     """
     # if len(U) == 0 or len(V) == 0:
     #     return True
-    global D
-    global count
-    count += 1
-    if count % 50 == 0:
-        print(f"Essential relation ILP call {count}")
+    D = parameters["data"]
+    increment_counter(parameters, "count")
+    ilp_timeout = parameters["ilp_timeout"]
+    n = parameters["numofrows"]
+    m = parameters["numofmutations"]
+    print_trace = parameters["print_trace"]
+    if parameters["count"] % 50 == 0:
+        print(f"Essential relation ILP call {parameters['count']} times.")
     try:
         # Silence console output
         env = Env(empty=True)
@@ -259,7 +196,55 @@ def test_ESS(k, U, V, sig):
         print(f"*********ERROR*********\n{ex}")
 
 
-def test_ESS_with_mutation(k, U, V, sig, j):
+def EssPairs(parameters: dict, k: int, u, V, G, sig: float):
+    if u in V:  # removing the self node from V
+        V.remove(u)
+    # we also need to remove vertices v from V, if we know that u <= v
+    # basically , V - out(u)
+    out_neighbors_u = list(G.successors(u))
+    for out_neigh in out_neighbors_u:
+        if out_neigh in V:
+            V.remove(out_neigh)
+    if len(V) > 0 and not test_ESS(parameters, k, [u], V, sig):
+        if len(V) == 1:
+            G.add_edge(u, V[0])
+            # self edges are already added
+            in_U = list(G.predecessors(u))
+            out_V = list(G.successors(V[0]))
+            for small_u in in_U:
+                for small_v in out_V:
+                    G.add_edge(small_u, small_v)
+        else:
+            (V_L, V_R) = split(V)
+            EssPairs(parameters, k, u, V_L, G, sig)
+            EssPairs(parameters, k, u, V_R, G, sig)
+
+
+def calculate_essential_for_given_k(k: int, parameters: dict):
+    D = parameters["data"]  # get the data matrix
+    sig = FindOpt(parameters, k)
+
+    S = list(range(D.shape[0]))
+
+    G = networkx.DiGraph()
+    G.add_nodes_from(S)
+    # Adding self edges
+    G.add_edges_from((node, node) for node in G.nodes)
+    disable_gt = parameters["disable_gt"]
+    if not disable_gt:
+        for u in S:
+            V = list(range(D.shape[0]))
+            EssPairs(parameters, k, u, V, G, sig)
+    else:
+        comb_n_c_2 = itertools.combinations(S, 2)
+        for (u, v) in comb_n_c_2:
+            EssPairs(parameters, k, u, [v], G, sig)
+            EssPairs(parameters, k, v, [u], G, sig)
+
+    return G, sig
+
+
+def test_ESS_with_mutation(parameters: dict, k: int, U, V, sig: float, j: int):
     """
     This function takes k, U, V, sig, j and returns false (infeasible) if \\exists u \\in U: \\exists v \\in V: X_{uj} \\leq_{e} X_{vj}
     Parameters:
@@ -273,14 +258,18 @@ def test_ESS_with_mutation(k, U, V, sig, j):
     """
     # if len(U) == 0 or len(V) == 0:
     #     return True
+    D = parameters["data"]
+
+    ilp_timeout = parameters["ilp_timeout"]
+    n = parameters["numofrows"]
+    m = parameters["numofmutations"]
+    print_trace = parameters["print_trace"]
     # check whether the mutation index is out of bounds
     if not (0 <= j <= m):
         raise Exception("The mutation index is out of range")
-    global D
-    global count
-    count += 1
-    if count % 50 == 0:
-        print(f"Essential relation ILP call {count}")
+    increment_counter(parameters, "count")
+    if parameters["count"] % 50 == 0:
+        print(f"Essential relation ILP call {parameters['count']} times.")
     try:
         # Silence console output
         env = Env(empty=True)
@@ -381,36 +370,185 @@ def test_ESS_with_mutation(k, U, V, sig, j):
         print(f"*********ERROR*********\n{ex}")
 
 
-def split(V):
-    mid = len(V) // 2
-    return V[:mid], V[mid:]
+def Width(G):
+    max = 0
+    for x in networkx.antichains(G):
+        if len(x) > max:
+            max = len(x)
+    return max
 
 
-fileResults = outputName + "." + str(k) + ".esspairs" + ".txt"
-print(f"The essential pairs will be written to {fileResults}")
-pathToResult = f"{args.result_folder}/{outputName}/"
-os.makedirs(pathToResult, exist_ok=True)
-
-Graph, the_opt = calculate_essential_for_given_k(k)
-
-# let's do a small test here.
-# we know that 0 <= 10
-for mutation in range(m):
-    print(f"Mutation {mutation}: The feasibility {test_ESS_with_mutation(k, [5], [6], the_opt, mutation)}")
-
-end_time = time.time()
-networkx.write_edgelist(Graph, f"{pathToResult}{fileResults}")  # writing essential relations to file.
-if verbose:
-    verboseResultFile = f"{pathToResult}{outputName}.{k}.esspairs.verbose.txt"
-    print(f"Verbose result is written into {verboseResultFile}")
-    f = open(verboseResultFile, "a")
-    f.write(f"k value: {k}\n")
-    f.write(f"n (number of samples): {n}\n")
-    f.write(f"m (number of mutations): {m}\n")
-    f.write(f"EssILP calls: {count}\n")
-    f.write(f"Runtime: {end_time - start_time} seconds\n")
-    f.write(f"Number of Nodes: {Graph.number_of_nodes()}\n")
-    # f.write(f"Poset Width: {Width(Graph)}\n")
-    f.write(f"Essential Relation: {[edge for edge in Graph.edges]}\n\n")
-    print(f"\nResults written was to file: {verboseResultFile}")
+def add_info_about_final_graph(g, output_name, kappa, results_folder="results"):
+    path_to_result = f"{results_folder}/{output_name}/"
+    verbose_result_file = f"{path_to_result}{output_name}_kappa_{kappa}.graph_info.txt"  # creates the file automatically if it is not there
+    print(f"Verbose result is written into {verbose_result_file}")
+    f = open(verbose_result_file, "a")
+    f.write(f"Number of Nodes: {g.number_of_nodes()}\n")
+    f.write(f"Poset Width: {Width(g)}\n")
+    f.write(f"Essential Relation: {[edge for edge in g.edges]}\n\n")
+    print(f"\nResults written was to file: {verbose_result_file}")
     f.close()
+    # persisting the intersection graph with collapsed with mutation labels
+    intersection_graph_file = f"{path_to_result}{output_name}_kappa_{kappa}.graph_persist.txt"
+    networkx.write_edgelist(g, intersection_graph_file, delimiter="#")  # writing essential relations to file.
+
+
+def find_the_mutation_labels(parameters: dict, g: networkx.DiGraph):
+    kmin = parameters["kmin"]
+    kmax = parameters["kmax"]
+    verbose = parameters["verbose"]
+    n = parameters["numofrows"]
+    m = parameters["numofmutations"]
+
+    # basically each edge in the hasse diagram we need to find mutations.
+    # first find the optimal value
+    for (u, v) in g.edges():  # for each edge
+        # we need to pick a representative from both u and v
+        u_rep = int(u.split(",")[0])
+        v_rep = int(v.split(",")[0])
+        print(f"u: {u_rep}, v: {v_rep}")
+        labels = []
+        for mutation in range(0, m):  # for each mutation
+            for k in range(kmin, kmax + 1):
+                sig_k = FindOpt(parameters, k)
+                # if v->u is feasible for mutation, add it to labels
+                feasibility = test_ESS_with_mutation(parameters, k, [v_rep], [u_rep], sig_k, mutation)
+                if verbose:
+                    if feasibility:
+                        print(f"Mutation {mutation} is feasible for v:{v} to u:{u}")
+                        labels.append(mutation)
+                        break
+                    else:
+                        print(f"Mutation {mutation} is NOT feasible for v:{v} to u:{u}")
+        g[u][v]["mutation_labels"] = str(labels)
+
+    for u, v in g.edges():
+        print(f"Edge {u}->{v} with weight {g[u][v]['mutation_labels']}")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Arguments for the EssentCell program")
+    parser.add_argument('inputFile', type=str, help="Sorted Input file to the program")
+    parser.add_argument('kmin', type=int, default=0, help="k min value for the input program")
+    parser.add_argument('kmax', type=int, default=0, help="k max value for the input program")
+    parser.add_argument('-result_folder', type=str, default="results_default", help="The result folder name")
+    parser.add_argument('--verbose', action='store_true', help='Increase output verbosity')
+    parser.add_argument('-print_trace_of_constraint', action='store_true', help='Increase the output verbosity of '
+                                                                                'constraints')
+    parser.add_argument('-timeout', type=float, default=float('inf'), help="Timeout value for ILP calls")
+    parser.add_argument('-disable_gt', action='store_true', help="diable group testing")
+    args = parser.parse_args()
+
+    print(f"Input file: {args.inputFile}")
+    print(f"Value of k min: {args.kmin}")
+    print(f"Value of k max: {args.kmax}")
+    print(f"Result folder name {args.result_folder}")
+    print(f"Verbosity: {args.verbose}")
+    print(f"Print Trace Verbosity: {args.print_trace_of_constraint}")
+    print(f"Group testing disabled: {args.disable_gt}")
+    print(f"ILP timeout: {args.timeout}")
+
+    fileName = args.inputFile
+    outputName = fileName[:-4]  # remove the file extension
+    print(f"Input file: {fileName}")
+    print(f"Output file: {outputName}")
+    results_folder = args.result_folder
+
+    # defining the necessary parameters for the whole run.
+    kmin = args.kmin
+    kmax = args.kmax
+    verbose = args.verbose
+    print_trace = args.print_trace_of_constraint
+    ilp_timeout = args.timeout
+
+    # First read the file and put the data into a dataframe
+    df = pd.read_csv(fileName)
+    df.index = range(1, len(df) + 1)
+
+    D = df.to_numpy()  # convert into numpy
+    n = D.shape[0]  # number of cells
+    m = D.shape[1]  # number of mutations
+
+    parameters = {"fileName": fileName, "kmin": kmin, "kmax": kmax, "verbose": verbose, "ilp_timeout": ilp_timeout,
+                  "print_trace": print_trace, "data": D, "numofrows": n, "numofmutations": m, "dataframe": df,
+                  "disable_gt": args.disable_gt}
+
+    # now we need to run the program for k = kmin to kmax and generate the graphs.
+    Graphs = []
+    for k in range(kmin, kmax + 1):
+        print(f"Value of k is : {k} and {df.head()}")
+        print(f"Number of rows {parameters['numofrows']}")
+        print(f"Number of rows {parameters['numofmutations']}")
+        parameters['count'] = 0
+        print(f"Setting the count variable to {parameters['count']}")
+        fileResults = outputName + "." + str(k) + ".esspairs" + ".txt"
+        print(f"The essential pairs will be written to {fileResults}")
+        pathToResult = f"{args.result_folder}/{outputName}/"
+        os.makedirs(pathToResult, exist_ok=True)
+
+        start_time = time.time()  # start time of the program.
+        Graph_k, the_opt = calculate_essential_for_given_k(k, parameters)
+        Graphs.append(Graph_k)
+        end_time = time.time()
+        networkx.write_edgelist(Graph_k, f"{pathToResult}{fileResults}")  # writing essential relations to file.
+        if verbose:
+            verboseResultFile = f"{pathToResult}{outputName}.{k}.esspairs.verbose.txt"
+            print(f"Verbose result is written into {verboseResultFile}")
+            f = open(verboseResultFile, "a")
+            f.write(f"k value: {k}\n")
+            f.write(f"n (number of samples): {n}\n")
+            f.write(f"m (number of mutations): {m}\n")
+            f.write(f"EssILP calls: {parameters['count']}\n")
+            f.write(f"Runtime: {end_time - start_time} seconds\n")
+            f.write(f"Number of Nodes: {Graph_k.number_of_nodes()}\n")
+            # f.write(f"Poset Width: {Width(Graph)}\n")
+            f.write(f"Essential Relation: {[edge for edge in Graph_k.edges]}\n\n")
+            print(f"\nResults written was to file: {verboseResultFile}")
+            f.close()
+
+    print("Step 2---------------------------------------------------------")
+    print("Working on the strongly connected graph")
+    print("Step 2.1--- Generating the intersection graph")
+
+    intersection_of_edges = set(Graphs[0].edges)
+    print(Graphs)
+    print(Graphs[0])
+    print(intersection_of_edges)
+    i = 0
+    while i <= (kmax - kmin) and len(intersection_of_edges) != 0:
+        g_i = Graphs[i]
+        intersection_of_edges = intersection_of_edges & set(g_i.edges)
+        i += 1
+
+    print(f"The final intersection of edges {intersection_of_edges}")
+    print("Cleaning up the edge set to create the final graph")
+    ess_list = list(intersection_of_edges)
+    g = networkx.DiGraph(ess_list)
+
+    print("Looking for strongly connected components")
+    for scc in networkx.strongly_connected_components(g):
+        l1 = [num for num in scc]
+        l2 = [str(scc)[1:len(str(scc)) - 1] for i in range(len(scc))]  # removing the curly brackets
+        mapping = dict(zip(l1,
+                           l2))  # here we use zip to label the nodes in the same scc to have labels of all the nodes in the scc
+        g = networkx.relabel_nodes(g,
+                                   mapping)  # once you call the relabel_nodes, nodes with same label in the new mapping collapses
+        # note that this automatically updates any old edges that we had between nodes with in the scc and going in/out to them
+
+    # Enforce that there are no self-loop (reflexive) edges in the graph
+    print("Removing self edges")
+    g.remove_edges_from(networkx.selfloop_edges(g))
+
+    # Enforce transitive property of the partial order relation
+    print("Removing transitive edges")
+    g = networkx.transitive_reduction(g)
+
+    print(g.edges)
+
+    find_the_mutation_labels(parameters, g)
+
+    add_info_about_final_graph(g, outputName, kmax, results_folder)
+
+
+if __name__ == '__main__':
+    main()
