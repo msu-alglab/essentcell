@@ -67,21 +67,23 @@ python EssentCell.py smallest.sorted.csv 0 2 --verbose -timeout 300
 
 This command will input the **smallest.sorted.csv** file that is residing in the root folder and run EssentCell program for k=0, k=1, and k=2 values. Then the program will create the following files.
 - k = 0
-  * smallest.sorted.0.esspairs.txt
-  * smallest.sorted.0.esspairs.verbose.txt
+  * [smallest.sorted.0.esspairs.txt](results_default/smallest.sorted/smallest.sorted.0.esspairs.txt)
+  * [smallest.sorted.0.esspairs.verbose.txt](results_default/smallest.sorted/smallest.sorted.0.esspairs.verbose.txt)
 - k = 1
-  * smallest.sorted.0.esspairs.txt
-  * smallest.sorted.0.esspairs.verbose.txt
+  * [smallest.sorted.1.esspairs.txt](results_default/smallest.sorted/smallest.sorted.1.esspairs.txt)
+  * [smallest.sorted.1.esspairs.verbose.txt](results_default/smallest.sorted/smallest.sorted.1.esspairs.verbose.txt)
 - k = 2
-  * smallest.sorted.0.esspairs.txt
-  * smallest.sorted.0.esspairs.verbose.txt
-- smallest.sorted_kappa_2.graph_info.txt
-- smallest.sorted_kappa_2.graph_persist.txt
+  * [smallest.sorted.2.esspairs.txt](results_default/smallest.sorted/smallest.sorted.1.esspairs.txt)
+  * [smallest.sorted.2.esspairs.verbose.txt](results_default/smallest.sorted/smallest.sorted.1.esspairs.verbose.txt)
+- [smallest.sorted_kappa_2.graph_info.txt](results_default/smallest.sorted/smallest.sorted_kappa_2.graph_info.txt)
+- [smallest.sorted_kappa_2.graph_persist.txt](results_default/smallest.sorted/smallest.sorted_kappa_2.graph_persist.txt)
 
 For each k value, **smallest.sorted.k.esspairs.txt** file contains the essential relation graph as set of edge list (before collapsing strongly connected components). The **smallest.sorted.k.esspairs.verbose.txt** files contain the extra information such as how many ILP calls were called and the total runtime for each particular **k** value along with other information about the graph. Please take a look at the example output and actual result outputs for more details.
 
 Next, smallest.sorted_kappa_2.graph_info.txt contains intersection graph, which contains the graph that has edges appearing in all essential relation graphs from k=min to k=kmax. Note that we further process this graph before persisting, i.e., we collapse the strongly connected components and perform transitive reduction.
 Finally, smallest.sorted_kappa_2.graph_persist.txt contains the same graph but with mutation labels.
+
+Note that if you run this command multiple times **smallest.sorted.k.esspairs.txt** files will be created from scratch while the data to the **smallest.sorted.k.esspairs.verbose.txt** files **will be appended at the end.** As you can see the verbose files contain records of multiple runs. If the user does not wish to see this behaviour, they can delete the verbose files before running the command again.
 
 Another example:
 
@@ -99,6 +101,15 @@ python EssentCell.py smallest.sorted_with_missing.csv  0  2 --verbose
 
 We have included a example input file called **smallest.sorted_with_missing.csv** with missing data entries. Note that this is a random file generated with missing entries. Check the corresponding output folder for the input file.
 
+If the user wishes to not use group testing for computing the essential relation, user can pass a special flag to the script and the program will use the naive approach to compute the essential relation. Following is an example usage on how to pass that flag. Here we put the result in a new folder called **result_wo_gt**.
+
+```
+python smallest.sorted.csv 0 2 -result_folder result_wo_gt --verbose -disable_gt
+```
+
+Refer the outout folder result_wo_gt for the output files.
+
+#### Example usage for generating the final essential relation graph
 
 The users can use **generategraph.py** to create essential relation graph as well. In order to use this script first, use the previous script to generate the necessary output files. Then create a new file called mutations.txt that contains the mutation mutation labels. In this file each row should contain a column id and mutation label seperated by blank space. The program will read this file to output the necessary edge label values with mutation names. Please check the output folders for example **mutations.txt** file.
 
@@ -138,9 +149,13 @@ python generategraph.py Patient2.csv 2 --verbose -node_fill_color None -min_node
 ```
 Two files will be created by this script.
 - Patient2_kappa_2.graph_cluster_id.txt
-    * his program will generate an additional file named **smallest.sorted_kappa_2.graph_cluster_id.txt** that contains the information about the cluster ids and cells allocated to each of these clusters.
+    * This program will generate an additional file named **smallest.sorted_kappa_2.graph_cluster_id.txt** that contains the information about the cluster ids and cells allocated to each of these clusters.
+    * [Refer the following file](https://github.com/msu-alglab/essentcell/blob/main/results_default/Patient2/Patient2_kappa_2.graph_cluster_id.txt)
 - Patient2_kappa_2.pdf
     * contains the final output graph.
+    * [Refer the following file](results_default/Patient2/Patient2_kappa_2.pdf)
+
+If the user wishes to **customize the final graph**, then the user can edit the **generategraph.py** using graphviz attributes to generate the desired output graph.
 
 TODOS:
 - Change code to handle the missing data.
