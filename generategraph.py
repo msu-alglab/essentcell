@@ -10,7 +10,7 @@ import matplotlib.colors as mcolors
 import colorsys
 import sys
 
-import EssentCellComplete
+import EssentCell
 
 
 def generate_graph(g, output_name, kappa, node_border_color="black", node_fill_color="none",
@@ -174,7 +174,7 @@ def main():
     print(f"change_node_fill_color_intensity: {args.change_node_fill_color_intensity}")
     print(f"do_not_keep_connections_when_deleting: {args.do_not_keep_connections_when_deleting}")
     print(
-        f'Maximum number of mutation labels: {args.max_number_of_mutation_labels if args.max_number_of_mutation_labels != sys.maxsize else 'All mutation labels are included'}')
+        f'Maximum number of mutation labels: {args.max_number_of_mutation_labels if args.max_number_of_mutation_labels != sys.maxsize else "All mutation labels are included"}')
     max_number_of_mutation_labels = args.max_number_of_mutation_labels
     filenamewithoutextension = args.inputFile[:-4]
     k = args.kappa
@@ -218,7 +218,7 @@ def main():
 
     # print information about the new graph
     print(f"Number of Nodes: {g.number_of_nodes()}")
-    print(f"Poset Width: {EssentCellComplete.Width(g)}")
+    print(f"Poset Width: {EssentCell.Width(g)}")
 
     # removing transitive edges again due to the fact that previous step of removing nodes might have added
     # transitive edges, however networkx also remove the edge data when you call this function
