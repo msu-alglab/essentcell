@@ -153,6 +153,8 @@ Two files will be created by this script.
     * contains the final output graph.
     * [Refer the following file](results_default/Patient2/Patient2_kappa_2.pdf)
 
+If the user wishes to **customize the final graph**, then the user can edit the **generategraph.py** using graphviz attributes to generate the desired output graph.
+
 TODOS:
 - Change code to handle the missing data.
 - Change constraint 8 to handle a single z_i (new method) 
