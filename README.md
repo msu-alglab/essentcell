@@ -147,9 +147,11 @@ python generategraph.py Patient2.csv 2 --verbose -node_fill_color None -min_node
 ```
 Two files will be created by this script.
 - Patient2_kappa_2.graph_cluster_id.txt
-    * his program will generate an additional file named **smallest.sorted_kappa_2.graph_cluster_id.txt** that contains the information about the cluster ids and cells allocated to each of these clusters.
+    * This program will generate an additional file named **smallest.sorted_kappa_2.graph_cluster_id.txt** that contains the information about the cluster ids and cells allocated to each of these clusters.
+    * [Refer the following file](https://github.com/msu-alglab/essentcell/blob/main/results_default/Patient2/Patient2_kappa_2.graph_cluster_id.txt)
 - Patient2_kappa_2.pdf
     * contains the final output graph.
+    * [Refer the following file](results_default/Patient2/Patient2_kappa_2.pdf)
 
 TODOS:
 - Change code to handle the missing data.
