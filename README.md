@@ -59,6 +59,8 @@ optional arguments:
 <a name="example"></a>
 ### Examples
 
+We have included two test input files for the user namely [smallest.sorted.csv](smallest.sorted.csv) and [smallest.sorted_with_missing.csv](smallest.sorted_with_missing.csv). These files do not represent actual biological data, rather they are example files for the user to try the program.
+
 Following is an example on how to run the script using **smallest.sorted.csv** as the input file. The user must run the EssentCell.py file by going into the folder that the **EssentCell.py** resides in. The input files to this script must reside in the same folder as well.
 
 ```
