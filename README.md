@@ -166,15 +166,3 @@ Another example:
 python generategraph.py smallest.sorted.csv 2 --verbose -result_folder result_wo_gt -node_fill_color None -min_node_size 0 -max_number_of_mutation_labels 6
 ```
 In this example, we have inputted "result_wo_gt" as the input and output folder for the generategraph.py. Note that **[mutations.txt](result_wo_gt/smallest.sorted/mutations.txt)** exists in the corresponding subfolder in **result_wo_gt**.
-
-TODOS:
-- Change code to handle the missing data.
-- Change constraint 8 to handle a single z_i (new method) 
-- Change input such that first row is name of mutation and column being name of cells.
-- (Related) Per cell list strongly component id as an addition to output.
-- Provide adjaceny matrix that list the mutations for the strongly connect components.
-
-
-Figures:
-- Add component/cluster id to nodes and number of cells.
-- Add mutations to edges.
