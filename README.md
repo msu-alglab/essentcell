@@ -65,6 +65,12 @@ We provide two example input files for testing:
 
 These files are not real biological datasets. They are included only to help users test and explore the program.
 
+There are four read biological datasets that we have included in this repository, which was used for experimenting. 
+
+- Patient2.csv and Patient6.csv contains the acute lymphoblastic leukemia (ALL) data of Patient 2 and Patient 6 in [1].
+- ER+ is an oestrogen-receptor-positive (ER+) breast cancer dataset from [2].
+- CRC1 is the human colorectal cancer (CRC) dataset (Patient 1) from [3].
+
 Below is an example of how to run the script using smallest.sorted.csv as the input file.
 To execute the program:
 * Navigate to the directory where EssentCell.py is located.
@@ -176,3 +182,13 @@ Another example:
 python generategraph.py smallest.sorted.csv 2 --verbose -result_folder result_wo_gt -node_fill_color None -min_node_size 0 -max_number_of_mutation_labels 6
 ```
 In this example, we have inputted "result_wo_gt" as the input and output folder for the generategraph.py. Note that **[mutations.txt](result_wo_gt/smallest.sorted/mutations.txt)** exists in the corresponding subfolder in **result_wo_gt**.
+
+
+## References
+\[1\] Gawad, C., Koh, W. and Quake, S.R., 2014. Dissecting the clonal origins of childhood acute lymphoblastic leukemia by single-cell genomics. Proceedings of the National Academy of Sciences, 111(50), pp.17947-17952.
+
+\[2\] Wang, Y., Waters, J., Leung, M.L., Unruh, A., Roh, W., Shi, X., Chen, K., Scheet, P., Vattathil, S., Liang, H. and Multani, A., 2014. Clonal evolution in breast cancer revealed by single nucleus genome sequencing. Nature, 512(7513), pp.155-160.
+Proceedings of the National Academy of Science 111, 50 (Dec. 2014),
+17947–17952.
+
+\[3\] Leung, M.L., Davis, A., Gao, R., Casasent, A., Wang, Y., Sei, E., Vilar, E., Maru, D., Kopetz, S. and Navin, N.E., 2017. Single-cell DNA sequencing reveals a late-dissemination model in metastatic colorectal cancer. Genome research, 27(8), pp.1287-1299.
