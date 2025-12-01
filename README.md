@@ -60,8 +60,12 @@ optional arguments:
                         Increase the output verbosity of gurobi ILP creations and prints out the constraints created by the ILP calls
   -timeout TIMEOUT      Timeout value for ILP calls; this should be given in seconds. Note that the timeout value is only considered for ILP calls that ivolves groups larger than 2. When we run a ILP calls between two cells, the timeout value will be ignored as we need to ensure that the ILP call is either feasible or infeasible. By default timeout value is infinity.
   -disable_gt           diable group testing; if the user desires not to use group testing, then enable this flag.
-
 ```
+
+More clarification on the timeout parameter:
+
+When a timeout value is specified, the EssentCell applies a size-aware timeout policy during each ILP call on a cell ```u``` with a candidate group ```V```. If ```|V| > 1``` and the ILP execution exceeds the timeout, the call is immediately aborted, the current instance is declared infeasible. Then the group ```V``` is split into two smaller subgroups, and the algorithm continues recursively on these reduced instances. However, when ```|V| = 1```, the timeout is completely ignored, and the ILP solver is allowed to run to completion regardless of duration. This design prevents excessive time spent on large groups that are likely infeasible while ensuring correctness for singleton groups, where an exact feasibility decision is required and prematurely aborting could falsely rule out a valid solution.
+
 <a name="example"></a>
 ### Examples
 
