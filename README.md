@@ -14,6 +14,8 @@ But, these samples are imperfect, often leading to multiple phylogenetic trees. 
   2. [Usage instructions](#usage)
      * [I/O formats](#io)
      * [Examples](#example)
+  3. [EssentCell Chernoff Bounds Calculation](#chernoff)
+  4. [References](#references)
 
 
 <a name="start"></a>
@@ -213,6 +215,13 @@ python generategraph.py smallest.sorted.csv 2 --verbose -result_folder result_wo
 In this example, the folder ```result_wo_gt``` is used as both the input and output directory for ```generategraph.py```.
 Note that ```mutations.txt``` must exist in the corresponding subfolder inside ```result_wo_gt``` for the script to label the graph nodes correctly.
 
+<a name="chernoff"></a>
+## EssentCell Chernoff Bound Calculation 
+Please refer the following Google doc for Chernoff bounds calculation. We have included details on how kappa values were calculated for the expermients.
+
+[Google Doc](https://docs.google.com/spreadsheets/d/17phrXbAOQIeapo4AA4rRBmVcv8G2S6Z_5giAjfuCDZo/edit?usp=sharing)
+
+<a name="references"></a>
 ## References
 \[1\] Gawad, C., Koh, W. and Quake, S.R., 2014. Dissecting the clonal origins of childhood acute lymphoblastic leukemia by single-cell genomics. Proceedings of the National Academy of Sciences, 111(50), pp.17947-17952.
 
