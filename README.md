@@ -217,7 +217,9 @@ Note that ```mutations.txt``` must exist in the corresponding subfolder inside `
 
 <a name="chernoff"></a>
 ## EssentCell Chernoff Bound Calculation 
-Please refer the following Google doc for Chernoff bounds calculation. We have included details on how kappa values were calculated for the expermients.
+To determine the appropriate ```kappa``` value for each dataset, we used a Chernoff bound to estimate the probability that the number of false positives ```#FP``` exceeded ```k```.
+
+Please refer the following Google doc for Chernoff bounds calculation. We have included details on how kappa values were calculated for the datasets that were used in the experiments.
 
 [Google Doc](https://docs.google.com/spreadsheets/d/17phrXbAOQIeapo4AA4rRBmVcv8G2S6Z_5giAjfuCDZo/edit?usp=sharing)
 
