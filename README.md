@@ -230,6 +230,10 @@ Please refer the following Google doc for Chernoff bounds calculation. We have i
 
 [Google Doc](https://docs.google.com/spreadsheets/d/17phrXbAOQIeapo4AA4rRBmVcv8G2S6Z_5giAjfuCDZo/edit?usp=sharing)
 
+<a name="doubletfiltering"></a>
+## Optional Doublet filtering
+
+
 <a name="references"></a>
 ## References
 \[1\] Gawad, C., Koh, W. and Quake, S.R., 2014. Dissecting the clonal origins of childhood acute lymphoblastic leukemia by single-cell genomics. Proceedings of the National Academy of Sciences, 111(50), pp.17947-17952.
