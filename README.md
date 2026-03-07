@@ -232,7 +232,26 @@ Please refer the following Google doc for Chernoff bounds calculation. We have i
 
 <a name="doubletfiltering"></a>
 ## Optional Doublet filtering
+```
+usage: doublet_filtering.py [-h] [-output_folder OUTPUT_FOLDER] inputFile cells_to_remove
 
+Arguments for the EssentCell program
+
+positional arguments:
+  inputFile             Input file to filter
+  cells_to_remove       Number of Cells that needs to be removed after filtering
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -output_folder OUTPUT_FOLDER
+                        The output folder name for filtered files. By default this folder is results_filtered.
+```
+
+```
+python doublet_filtering.py data/Patient2.csv 2
+```
+
+When you input your SCS data into this program, tool will rank the cells based on the following formula and will remove largest ```cells_to_remove``` from the input and create a new dataset.
 
 <a name="references"></a>
 ## References
