@@ -251,7 +251,12 @@ optional arguments:
 python doublet_filtering.py data/Patient2.csv 2
 ```
 
-When you input your SCS data into this program, tool will rank the cells based on the following formula and will remove largest ```cells_to_remove``` from the input and create a new dataset.
+When you input your SCS data into this program, tool will rank the cells based on the following idea and will remove largest ```cells_to_remove``` from the input and create a new dataset.
+
+let 
+$` C_k = | \{ (i,j,p,q) : i < j, k \notin \{i,j\}, D_{ip} =  D_{jq} = 0, D_{iq} = D_{jp} = D_{kp} = D_{kq}= 1 \} |, `$
+be the number of distinct conflicts that row ```k``` participates in as the bottom row in some conflict submatrix. We use this value as the rank of that particular cell. We can then sort
+the cells(rows) by their $C$ values so that: $`C_1 \ge C_2 \ge C_3 \ge \cdots \ge C_n`$. If there are doublets present, then they are more likely to occur in the beginning of this sorted list. **doublet_filtering.py** tool in **EssentCell** can optionally compute this ranking and apply a rank threshold $`cells\_to\_remove \ge 0`$, where the ```cells_to_remove``` rows of ```D``` with the highest ```C``` values are considered potential doublets and subsequently removed.
 
 <a name="references"></a>
 ## References
