@@ -5,6 +5,7 @@ import os
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 def main():
@@ -33,14 +34,22 @@ def main():
     rank_dict = compute_rank(D)
 
     print(f"Rank dictionary: {rank_dict}")
-    sorted__pairs_of_ranks = sorted(rank_dict.items(), key=lambda x: x[1], reverse=True)
+    sorted_pairs_of_ranks = sorted(rank_dict.items(), key=lambda x: x[1], reverse=True)
     if cells_to_remove > rows:
         cells_to_remove = rows
     number_of_rows_to_delete = cells_to_remove
     print(f"Number of rows to delete: {number_of_rows_to_delete}")
 
-    indices_to_remove = [i for i, j in sorted__pairs_of_ranks[:number_of_rows_to_delete]]
+    print(sorted_pairs_of_ranks)
+
+    indices_to_remove = [i for i, j in sorted_pairs_of_ranks[:number_of_rows_to_delete]]
     print(f"indices_to_remove: {indices_to_remove}")
+
+    x = [i for i, j in sorted_pairs_of_ranks]
+    y = [j for i, j in sorted_pairs_of_ranks]
+
+    plt.scatter(range(0, len(y)), y, s=2)
+    plt.show()
 
     new_D = np.delete(D, indices_to_remove, axis=0)
     print(f"new_D.shape: {new_D.shape}")
@@ -77,7 +86,7 @@ def compute_doublety_value(i_array, j_array, k_array) -> int:
     assert i_array.shape[0] == j_array.shape[0]
     assert i_array.shape[0] == k_array.shape[0]
     cols = i_array.shape[0]
-    count = 0;
+    count = 0
     numbers = [i for i in range(0, cols)]
     for p, q in itertools.combinations(numbers, 2):
         if (i_array[p] == j_array[q] == 0) and (i_array[q] == j_array[p] == k_array[p] == k_array[q] == 1):
