@@ -41,7 +41,7 @@ EssentCell has the following dependencies
 ### I/O formats
 The input to EssentCell is a .csv file that contains n rows and m columns where n is the the number of single-cells and m is the number of mutations.  All entries in the .csv file should be either 1 if mutation j is present in cell i or 0 if mutation j is not present in cell i. Missing entries should be indicated by -1.  
 
-If the single cell data may contain doublets, the user can first use the doublet filtering tool that we have provided or use an existing doublet filtering tool like DoubletD, Scrublet. Once the doublet filtering tool is applied the user can use the resulting dataset as the input to the EssentCell.
+If the single cell data may contain doublets, the user can first use the doublet filtering tool that we have provided or use an existing doublet filtering tool like DoubletD, Scrublet. Once the doublet filtering tool is applied the user can use the resulting dataset as the input to the EssentCell. Please refer to [Optional Doublet filtering](#doubletfiltering) on how to use the tool.
 
 ```
 usage: EssentCell.py [-h] [-result_folder RESULT_FOLDER] [--verbose] [-print_trace_of_constraint] [-timeout TIMEOUT] [-disable_gt] inputFile kmin kmax
