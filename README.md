@@ -15,7 +15,7 @@ But, these samples are imperfect, often leading to multiple phylogenetic trees. 
      * [I/O formats](#io)
      * [Examples](#example)
   3. [EssentCell Chernoff Bounds Calculation](#chernoff)
-  4. [Doublet filtering](#doubletfiltering)
+  4. [Optional Doublet filtering](#doubletfiltering)
   5. [References](#references)
 
 
